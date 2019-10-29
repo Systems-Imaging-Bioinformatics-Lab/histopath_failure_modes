@@ -1,0 +1,3 @@
+[submodule "DeepPATH"]
+	path = DeepPATH
+	url = https://github.com/ncoudray/DeepPATH/
