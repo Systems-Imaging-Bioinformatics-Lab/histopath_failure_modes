@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.jpeg
+.DS_STORE
+playground/
+.snakemake*
+checkpoints/
+.vscode/
+work/
