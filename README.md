@@ -33,7 +33,7 @@ Lastly, set up a work directory where the snakemake workflow will find input fil
 
 ## Predict Slide Classes
 
-## Downloading Slide Images
+### Downloading Slide Images
 To download slide images to use with this workflow, you'll leed to use the [GDC legacy portal](https://portal.gdc.cancer.gov/legacy-archive/search/f) to enable the metadata files to be compatible. 
 
 1. Add the SVS images you want to your cart(and ONLY svs images)
