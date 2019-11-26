@@ -9,9 +9,10 @@ output_dir = Path("work/output/")
 src_path = Path("DeepPATH/DeepPATH_code/").absolute()
 ckpt = "run2a_3D_classifier/"
 
+wildcard_constraints:
+        dataset="\w+"
 
 datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()]
-print(datasets)
 rule all:
     input: expand(str(output_dir / "{dataset}"),dataset=datasets)
 
@@ -49,15 +50,15 @@ rule make_tf_record:
 rule predict:
     input: 
         data=rules.make_tf_record.output,
-    output: directory(str(output_dir / "{dataset}"))
+    output: str(output_dir / "{dataset}" / "out_filename_Stats.txt")
     shell:
         """
-        mkdir -p {output}
-        python '{src_path}/02_testing/xClasses/nc_imagenet_eval.py' --checkpoint_dir=checkpoints/{ckpt} --eval_dir={output} --data_dir={input.data}  --batch_size 300  --run_once --ImageSet_basename='test_' --ClassNumber 3 --mode='0_softmax'  --TVmode='test'
+        mkdir -p $(dirname {output})
+        python '{src_path}/02_testing/xClasses/nc_imagenet_eval.py' --checkpoint_dir=checkpoints/{ckpt} --eval_dir=$(dirname {output}) --data_dir={input.data}  --batch_size 300  --run_once --ImageSet_basename='test_' --ClassNumber 3 --mode='0_softmax'  --TVmode='test'
         """
 
 rule agg_results:
-    input: output_dir / "{dataset}" / "out_filename_Stats.txt"
+    input: str(output_dir / "{dataset}" / "out_filename_Stats.txt")
     output:  directory(str(output_dir / "{dataset}" / "auc"))
     shell:
         """
