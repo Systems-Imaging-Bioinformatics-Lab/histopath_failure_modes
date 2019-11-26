@@ -1,14 +1,18 @@
 name: b590prj
 channels:
   - defaults
+  - conda-forge
+  - bioconda
 dependencies:
   - tensorflow=1.0.0
   - snakemake
-  - pillow=4.2.1
-  - openslide-python=1.1.1
+  - pillow
+  - openslide-python
   - pydicom=0.9.9
   - scipy
   - scikit-learn
   - matplotlib
+  - jupyter
+  - opencv
 prefix: /Users/jeremykaplan/bin/miniconda3/envs/b590prj
 

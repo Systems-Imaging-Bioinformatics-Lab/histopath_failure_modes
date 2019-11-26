@@ -13,7 +13,7 @@ ckpt = "run2a_3D_classifier/"
 datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()]
 print(datasets)
 rule all:
-    input: expand(str(output_dir / "{dataset}" / "auc/"),dataset=datasets)
+    input: expand(str(output_dir / "{dataset}"),dataset=datasets)
 
 
 rule tile_images:
