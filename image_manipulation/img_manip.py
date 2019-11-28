@@ -13,13 +13,24 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
         inPts = np.concatenate((np.random.randint(invDim[0],size=(nPts,1)),
                                  np.random.randint(invDim[1],size=(nPts,1))),
                                 axis=1)
-        if startEdge == True:
-            edgeNum = np.random.randint(4)
+        startEdgeFlag = (startEdge == True) or (startEdge in range(0,4))
+        if startEdgeFlag == True:
+            if (startEdge in range(0,4)): # allow for manual specification of edge
+                edgeNum = startEdge
+            else:
+                edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom
             inPts[0,LR_v_TB] = LT_V_RB * invDim[LR_v_TB] # one edge or the other
-        if endEdge == True:
-            edgeNum = np.random.randint(4)
+        if endEdge == True or (endEdge in range(0,4)) or (endEdge in range(-4,0) and startEdgeFlag):
+            if (endEdge in range(0,4)):  # allow for manual specification of edge
+                edgeNum = endEdge
+            elif(endEdge in range(-4,0) and startEdgeFlag): 
+                # allow for relative specification of end edge compared to the start edge
+                # -2 is opposite side, -4 is the same side
+                edgeNum = ((endEdge + edgeNum + 4) % 4)
+            else:
+                edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom    
             inPts[nPts-1,LR_v_TB] = LT_V_RB * invDim[LR_v_TB] # one edge or the other
@@ -74,17 +85,21 @@ def add_fold(input_im,samp_arr =None, sampSpl=None, inPts = None,random_seed =No
     signTup = (-1,1)
     for di in range(2):
         rsSplBBox[di,:] = np.mean(sampSplBBox,axis=0) + (((sampSplBBSz/2) / scaleXY) * signTup[di])
+        
+    rsSplBBSz = np.diff(rsSplBBox,axis=0)
 
     sampSplBBPts = np.zeros((4,2),dtype=np.float32)
     outBBPts = np.zeros((4,2),dtype=np.float32)
-
+    randShiftX = np.random.randint(-int(rsSplBBSz[0,0]/4),int(rsSplBBSz[0,0]/4),size=(4,1))
+    randShiftY = np.random.randint(-int(rsSplBBSz[0,1]/4),int(rsSplBBSz[0,1]/4),size=(4,1))
+    
     for di in range(sampSplBBPts.shape[0]):    
         LR_v_TB = di % 2 # left/right vs top/bottom
         LT_V_RB = di // 2 # left/top vs right/bottom
         sampSplBBPts[di,0] = sampSplBBox[LR_v_TB,0]
         sampSplBBPts[di,1] = sampSplBBox[LT_V_RB,1]
-        outBBPts[di,0] = rsSplBBox[LR_v_TB,0] + pad_szXY[0] + shiftXY[0]
-        outBBPts[di,1] = rsSplBBox[LT_V_RB,1] + pad_szXY[1] + shiftXY[1]
+        outBBPts[di,0] = rsSplBBox[LR_v_TB,0] + pad_szXY[0] + shiftXY[0] + randShiftX[di]
+        outBBPts[di,1] = rsSplBBox[LT_V_RB,1] + pad_szXY[1] + shiftXY[1] + randShiftY[di]
 
     M = cv2.getPerspectiveTransform(outBBPts,sampSplBBPts)
 
