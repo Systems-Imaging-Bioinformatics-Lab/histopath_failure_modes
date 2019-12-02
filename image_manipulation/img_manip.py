@@ -324,6 +324,7 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
     random_hash = hash(fName) + randAdd
     random_seed = random_hash % randMax
     
+    artifactType = artifactType.lower()
     if artifactType == "marker":
         outputIm = add_marker(inputIm,random_seed = random_seed)
     elif artifactType == "fold":
@@ -341,7 +342,7 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
             if not os.path.exists(outputDir):
                 os.makedirs(outputDir)
             outputImName = os.path.join(outputDir,outputImName)
-    outputIm.save(outputImName, ext)
+    outputIm.save(outputImName)
     return outputIm
 
 if __name__ == '__main__':
