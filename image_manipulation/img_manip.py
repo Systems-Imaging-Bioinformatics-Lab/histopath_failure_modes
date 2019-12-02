@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from scipy import interpolate
 from scipy.ndimage import morphology
@@ -92,7 +93,7 @@ def rand_gauss(dim,zeroToOne = False, maxCov = 2500, nNorms = 25, random_seed = 
     sumMap = sumMap * maxCov
     return sumMap
 
-def add_marker(input_im,random_seed = None,nPts = 4, sampSpl = None, inPts = None, 
+def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
               width = 50, alpha = .75, rgbVal= None,
               rgbRange = np.array([[0,100],[0,100],[0,100]])):
     np.random.seed(seed=random_seed)
@@ -102,7 +103,7 @@ def add_marker(input_im,random_seed = None,nPts = 4, sampSpl = None, inPts = Non
             rgbVal[i] = np.random.randint(rgbRange[i,0],rgbRange[i,1])
         rgbVal = rgbVal.flatten()
 
-    dim = input_im.size # width by height
+    dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
 #     print(sampSpl is None, inPts is None)
     if sampSpl is None:
@@ -118,7 +119,7 @@ def add_marker(input_im,random_seed = None,nPts = 4, sampSpl = None, inPts = Non
     bw_dist = morphology.distance_transform_edt(mask)
 
     bw_reg = bw_dist <= width
-    im_rgba = input_im.convert("RGBA")
+    im_rgba = inputIm.convert("RGBA")
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
     color_arr = np.zeros((dim[0],dim[1],3),dtype=np.uint8)
     for i in range(len(rgbVal)):
@@ -126,15 +127,16 @@ def add_marker(input_im,random_seed = None,nPts = 4, sampSpl = None, inPts = Non
     color_layer = Image.fromarray(color_arr,'RGB')
 
     comp_im = Image.composite(color_layer, im_rgba, alpha_mask)
+    comp_im = comp_im.convert("RGB")
     return comp_im
 
 
-def add_fold(input_im,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1],fold_width = 100,
-             samp_shiftXY = None,randEdge=False, nLayers = 1, nPts = 3,endEdge = -2):
+def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1],fold_width = 100,
+             samp_shiftXY = None,randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
     np.random.seed(seed=random_seed)
 
-    im_arr = np.array(input_im)
-    dim = input_im.size # width by height
+    im_arr = np.array(inputIm)
+    dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
 
     if sampSpl is None:
@@ -194,7 +196,7 @@ def add_fold(input_im,samp_arr =None, sampSpl=None, inPts = None,random_seed =No
         distRand = np.random.randint(-int(fold_width/2),int(fold_width/2),size=invDim)
         bw_dist = blur(bw_dist+distRand,(5,5))
     
-    im_L =  input_im.convert("L")
+    im_L =  inputIm.convert("L")
     im_L_arr = np.array(im_L)
     bw_reg = bw_dist <= fold_width
     
@@ -213,11 +215,11 @@ def add_fold(input_im,samp_arr =None, sampSpl=None, inPts = None,random_seed =No
                  nLayers=nLayers-1)
     return comb_img
 
-def add_sectioning(input_im, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
+def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
                   sampSpl = None, inPts = None):
     # Uneven sectioning due to different thicknesses of slide
     np.random.seed(seed=random_seed)
-    dim = input_im.size # width by height
+    dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
     
     if sampSpl is None:
@@ -244,7 +246,7 @@ def add_sectioning(input_im, sliceWidth = 120, random_seed = None, scaleMin = .5
 
     nDistRng[np.logical_not(bw_reg)] = 1
 
-    imHSV = input_im.convert("HSV")
+    imHSV = inputIm.convert("HSV")
     imHSV_arr = np.array(imHSV)
     imHSV_arr[:,:,1] = np.minimum(255,np.multiply(imHSV_arr[:,:,1],nDistRng))
     imHSV_arr[:,:,2] = np.minimum(255,np.divide(imHSV_arr[:,:,2],(nDistRng+1)/2))
@@ -253,14 +255,14 @@ def add_sectioning(input_im, sliceWidth = 120, random_seed = None, scaleMin = .5
     imSat = imSatHSV.convert("RGB")
     return imSat
 
-def add_bubbles(input_im,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
+def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
                edgeColorMult = .75, rgbVal = (225,225,225)):
     np.random.seed(seed=random_seed)
-    dim = input_im.size # width by height
+    dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
-    maxCov = maxWidth^2
+#     maxCov = maxWidth
     
-    sumMap = rand_gauss(dim,random_seed = random_seed, nNorms=nBubbles, maxCov = maxCov, zeroToOne = False,
+    sumMap = rand_gauss(dim,random_seed = random_seed, nNorms=nBubbles, maxCov = maxWidth, zeroToOne = False,
                        minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7)
     bw_reg = sumMap >= 1
     # mask = 1-bw_reg # invert the mask
@@ -270,19 +272,19 @@ def add_bubbles(input_im,random_seed = None,nBubbles = 25, maxWidth = 50,alpha =
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
     color_arr = np.zeros((dim[0],dim[1],3),dtype=np.uint8)
 
-    meanColor = np.mean(np.array(input_im),axis=(0,1))
+    meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
         color_arr[:,:,i] = rgbVal[i]
         color_arr[edge_area,i] = np.uint8(meanColor[i] * edgeColorMult)
 
     color_layer = Image.fromarray(color_arr,'RGB')
-    comp_im = Image.composite(color_layer, input_im, alpha_mask)
+    comp_im = Image.composite(color_layer, inputIm, alpha_mask)
     return comp_im
 
-def add_illumination(input_im,random_seed = None, maxCov = 15, nNorms = 3,scaleMin = .8,scaleMax = 1.1,
+def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMin = .8,scaleMax = 1.1,
                     minCovScale = .5,minDiagCovScale = .1, maxCrCovScale = .2):
     np.random.seed(seed=random_seed)
-    dim = input_im.size # width by height
+    dim = inputIm.size # width by height
     invDim = (dim[1],dim[0])
 
     xV = np.linspace(0,1,num= dim[0])
@@ -304,9 +306,41 @@ def add_illumination(input_im,random_seed = None, maxCov = 15, nNorms = 3,scaleM
     scaleRMinMax = np.concatenate((scaleRandMin,scaleRandMax),axis = 1).flatten()
     nSumMap = np.interp(nSumMap,np.array([0,1],dtype=np.float64),scaleRMinMax)
     
-    imHSV = input_im.convert("HSV")
+    imHSV = inputIm.convert("HSV")
     imHSV_arr = np.array(imHSV)
     imHSV_arr[:,:,2] = np.minimum(255,np.multiply(imHSV_arr[:,:,2],nSumMap))
     imLumHSV = Image.fromarray(imHSV_arr,"HSV")
     imLum = imLumHSV.convert("RGB")
     return imLum
+
+def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg"):
+    inputIm = Image.open(inputImName)
+
+    inputImDir,fName = os.path.split(inputImName)
+    fNameNoExt = os.path.splitext(fName)[0]
+    randMax = (2**32) -1  # max size of the random seed
+    # there's potentially some concern about the difference in 32 bit vs 64 bit systems
+    random_hash = hash(fName) + randAdd
+    if random_hash < 0:
+        random_hash = random_hash + randMax
+    random_seed = random_hash % randMax
+    
+    if artifactType == "marker":
+        outputIm = add_marker(inputIm,random_seed = random_seed)
+    elif artifactType == "fold":
+        outputIm = add_fold(inputIm,random_seed = random_seed)
+    elif artifactType == "sectioning":
+        outputIm = add_sectioning(inputIm,random_seed = random_seed)
+    elif artifactType == "illumination":
+        outputIm = add_illumination(inputIm,random_seed = random_seed)
+    elif artifactType == "bubbles":
+        outputIm = add_bubbles(inputIm,random_seed = random_seed)
+    outputSuffix = artifactType[0:4]
+    if outputImName is None:
+        outputImName = "%s_%s.%s" % (fNameNoExt, outputSuffix, ext)
+        if outputDir is not None:
+            if not os.path.exists(outputDir):
+                os.makedirs(outputDir)
+            outputImName = os.path.join(outputDir,outputImName)
+    outputIm.save(outputImName, ext)
+    return outputIm
