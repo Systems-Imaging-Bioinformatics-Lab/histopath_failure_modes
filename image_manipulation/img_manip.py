@@ -1,3 +1,4 @@
+import sys
 import os
 import numpy as np
 from scipy import interpolate
@@ -344,3 +345,7 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
             outputImName = os.path.join(outputDir,outputImName)
     outputIm.save(outputImName, ext)
     return outputIm
+
+if __name__ == '__main__':
+    # Map command line arguments to function arguments.
+    apply_artifact(*sys.argv[1:])
