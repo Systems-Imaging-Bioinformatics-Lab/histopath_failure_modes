@@ -322,8 +322,6 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
     randMax = (2**32) -1  # max size of the random seed
     # there's potentially some concern about the difference in 32 bit vs 64 bit systems
     random_hash = hash(fName) + randAdd
-    if random_hash < 0:
-        random_hash = random_hash + randMax
     random_seed = random_hash % randMax
     
     if artifactType == "marker":
