@@ -50,7 +50,7 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
     splXY = interpolate.pchip_interpolate(cdXY,inPts,iDist)
     return splXY
 
-def rand_gauss(dim,zeroToOne = False, maxCov = 2500, nNorms = 25, random_seed = None,centXY = None,
+def rand_gauss(dim,zeroToOne = False, maxCov = 50, nNorms = 25, random_seed = None,centXY = None,
               minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
     np.random.seed(seed=random_seed)
     invDim = (dim[1],dim[0])
@@ -315,16 +315,23 @@ def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMi
     return imLum
 
 def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg"):
+    artifactType = artifactType.lower()
+    # to remove any linkage between the different types of random addition (e.g. marker vs fold)
+    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5}
+    
     inputIm = Image.open(inputImName)
 
     inputImDir,fName = os.path.split(inputImName)
+    oPath1, rDir1 = os.path.split(inputImDir)
+    _, rDir2 = os.path.split(oPath1)
     fNameNoExt = os.path.splitext(fName)[0]
+    fID = os.path.join(rDir2,rDir1,fNameNoExt)
+
     randMax = (2**32) -1  # max size of the random seed
     # there's potentially some concern about the difference in 32 bit vs 64 bit systems
-    random_hash = hash(fName) + randAdd
+    random_hash = hash(fID) + randAdd + typeSeedAdd[artifactType]
     random_seed = random_hash % randMax
     
-    artifactType = artifactType.lower()
     if artifactType == "marker":
         outputIm = add_marker(inputIm,random_seed = random_seed)
     elif artifactType == "fold":
