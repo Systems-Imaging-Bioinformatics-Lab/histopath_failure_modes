@@ -1,0 +1,1909 @@
+[{
+  "md5sum": "92f4c6ce2780044e533b6ecb8cb95ec8", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-91-8496-01A-01-TS1.a92cfb28-63e4-4853-bc2c-4d614dfebdbf.svs", 
+  "file_size": 15654923, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "865dc5f5-3235-4c58-a81c-ecd5a40e3365", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "a92cfb28-63e4-4853-bc2c-4d614dfebdbf", 
+      "case_id": "656a5eb4-e4a5-4d21-a800-3586f4d6588b", 
+      "entity_submitter_id": "TCGA-91-8496-01A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.3", 
+          "submitter_id": "TCGA-91-8496_diagnosis", 
+          "tumor_stage": "stage ib", 
+          "age_at_diagnosis": 23358.0, 
+          "vital_status": "alive", 
+          "morphology": "8252/3", 
+          "days_to_death": null, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "b3ce35c0-19ef-5f2b-a6f4-33b6ded70426", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-91-8496_treatment", 
+              "treatment_id": "a31bd6fe-3141-5dfd-b9e2-1e1b9fa03c0b", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.3", 
+          "days_to_birth": -23358.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.3", 
+          "days_to_last_follow_up": 505.0
+        }
+      ], 
+      "disease_type": "Lung Adenocarcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1948, 
+        "submitter_id": "TCGA-91-8496_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "c9e861cd-8881-5842-a889-50878a68fe35", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-91-8496", 
+      "project": {
+        "project_id": "TCGA-LUAD"
+      }, 
+      "state": "live", 
+      "case_id": "656a5eb4-e4a5-4d21-a800-3586f4d6588b", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-91-8496-01A", 
+          "intermediate_dimension": "0.4", 
+          "sample_id": "8f55069f-2232-44b6-b9e8-7e12b3a268bd", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "d513e826-62f5-4e2d-95ef-7b48fea0643a", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.3", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1339545600, 
+              "portion_number": "11", 
+              "weight": 32.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-91-8496-01A-11", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 15.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 75.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-91-8496-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "a92cfb28-63e4-4853-bc2c-4d614dfebdbf", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 10.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 75.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 60.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 40.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-91-8496-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "af760190-ab2f-45d6-a632-ce7b34eff52c", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 10.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 30.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "c63a0033-6229-4b4f-b02b-500a2a94aa15", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "2"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": null, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": null, 
+          "submitter_id": "TCGA-91-8496_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "58f7a8f5-ddd6-5384-a148-a9ed22d63e1c", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "8688338a-e38a-44fe-8ce4-bbc68a221082", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUAD.tissue_images.Level_1.238.4.0.tar.gz", 
+    "md5sum": "d43e8f8f7d4095a2b863495f7129def5", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUAD.tissue_images.Level_1.238", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 25805697785, 
+    "file_state": "submitted", 
+    "revision": 4
+  }
+},{
+  "md5sum": "016fdffa712ee291c895eeaf95ec7044", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "archive": {
+    "archive_id": "65fd4d86-027d-4142-9abd-10d18cdaafa8", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUAD.tissue_images.Level_1.166.4.0.tar.gz", 
+    "md5sum": "e4d86fa12722dbcf749dbe08966a72a3", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUAD.tissue_images.Level_1.166", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 6153762541, 
+    "file_state": "submitted", 
+    "revision": 4
+  }, 
+  "file_name": "TCGA-38-7271-11A-01-TS1.0125556f-24d6-4976-94fa-f092ebaa418a.svs", 
+  "file_size": 16741215, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "3b4445eb-e62c-4346-a8b2-f098c189e8b4", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "0125556f-24d6-4976-94fa-f092ebaa418a", 
+      "case_id": "8214a0d1-5e2d-4a7a-acb1-e5580755db83", 
+      "entity_submitter_id": "TCGA-38-7271-11A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.1", 
+          "submitter_id": "TCGA-38-7271_diagnosis", 
+          "tumor_stage": "stage ia", 
+          "age_at_diagnosis": 26440.0, 
+          "vital_status": "dead", 
+          "morphology": "8140/3", 
+          "days_to_death": 800.0, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "e405bb3f-169e-5148-9c9f-46bf2cdf1b81", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-38-7271_treatment", 
+              "treatment_id": "efb9e09e-36e7-5c3f-8aa2-563d548af2c5", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.1", 
+          "days_to_birth": -26440.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.1", 
+          "days_to_last_follow_up": null
+        }
+      ], 
+      "disease_type": "Lung Adenocarcinoma", 
+      "updated_datetime": "2017-03-09T09:44:08.033782-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1934, 
+        "submitter_id": "TCGA-38-7271_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "3081168f-d6ae-54cd-b182-db7c052b4c04", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": 2008
+      }, 
+      "submitter_id": "TCGA-38-7271", 
+      "project": {
+        "project_id": "TCGA-LUAD"
+      }, 
+      "state": "live", 
+      "case_id": "8214a0d1-5e2d-4a7a-acb1-e5580755db83", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "11", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-38-7271-11A", 
+          "intermediate_dimension": "0.7", 
+          "sample_id": "75bea0a1-0198-40ac-9a57-d2d0ee244c2f", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": null, 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Solid Tissue Normal", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.2", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1314662400, 
+              "portion_number": "01", 
+              "weight": 60.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-38-7271-11A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": 0.0, 
+                  "percent_monocyte_infiltration": 1.0, 
+                  "percent_normal_cells": null, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": null, 
+                  "percent_lymphocyte_infiltration": 1.0, 
+                  "submitter_id": "TCGA-38-7271-11A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": null, 
+                  "slide_id": "0125556f-24d6-4976-94fa-f092ebaa418a", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": null, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": null
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "b4700dbb-83f2-4b8e-8b63-ed74efe7f86f", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "0.9"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.36986301369863, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 28.0, 
+          "submitter_id": "TCGA-38-7271_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "1366b584-478f-51ec-861d-e995109b97eb", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "annotations": [
+    {
+      "category": "Synchronous malignancy", 
+      "status": "Approved", 
+      "entity_id": "8214a0d1-5e2d-4a7a-acb1-e5580755db83", 
+      "classification": "Notification", 
+      "entity_type": "case", 
+      "created_datetime": "2012-11-10T00:00:00", 
+      "annotation_id": "1e96152b-4348-5e1a-8ab3-ad980a5615b8", 
+      "notes": "Pt with synchronous L breast cancer", 
+      "updated_datetime": "2017-03-09T11:51:15.143710-06:00", 
+      "submitter_id": "11942", 
+      "state": "submitted", 
+      "case_id": "8214a0d1-5e2d-4a7a-acb1-e5580755db83", 
+      "entity_submitter_id": "TCGA-38-7271"
+    }
+  ]
+},{
+  "md5sum": "0d957b70a1ccdc59a9eec1f4a5d5d0f1", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-44-2657-01A-01-TS1.cee29017-5940-4c9c-89b8-8687aa6f9f5a.svs", 
+  "file_size": 20278865, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "ad8ec53b-1fa7-4040-aa4d-1be0e050be64", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "cee29017-5940-4c9c-89b8-8687aa6f9f5a", 
+      "case_id": "f40301ba-831e-4afd-9ce8-5f3c1a05ff7e", 
+      "entity_submitter_id": "TCGA-44-2657-01A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.1", 
+          "submitter_id": "TCGA-44-2657_diagnosis", 
+          "tumor_stage": "stage ib", 
+          "age_at_diagnosis": 27298.0, 
+          "vital_status": "alive", 
+          "morphology": "8140/3", 
+          "days_to_death": null, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "7982fa01-64e5-508d-9bc7-fa962a4d4b47", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-44-2657_treatment", 
+              "treatment_id": "93d097b5-0fb6-59f1-98dd-b719b1b69091", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.1", 
+          "days_to_birth": -27298.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.1", 
+          "days_to_last_follow_up": 1351.0
+        }
+      ], 
+      "disease_type": "Lung Adenocarcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1935, 
+        "submitter_id": "TCGA-44-2657_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "f9ecfdd0-5d6f-5f0a-a990-b7d5167143b5", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-44-2657", 
+      "project": {
+        "project_id": "TCGA-LUAD"
+      }, 
+      "state": "live", 
+      "case_id": "f40301ba-831e-4afd-9ce8-5f3c1a05ff7e", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-44-2657-01A", 
+          "intermediate_dimension": "0.6", 
+          "sample_id": "1028d7a9-0ac0-4fd8-a34b-46f3e6e53f79", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "d31fa48b-949c-48b7-bc78-6954ede98172", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.3", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1262131200, 
+              "portion_number": "01", 
+              "weight": 117.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-44-2657-01A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 5.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 70.0, 
+                  "percent_lymphocyte_infiltration": 5.0, 
+                  "submitter_id": "TCGA-44-2657-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "cee29017-5940-4c9c-89b8-8687aa6f9f5a", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 15.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 80.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 75.0, 
+                  "percent_lymphocyte_infiltration": 20.0, 
+                  "submitter_id": "TCGA-44-2657-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "76c73b34-7b9c-4daf-9a8f-e74e7734489d", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 12.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 88.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "87356687-6e08-4696-bd64-45ec490dbcc3", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "1"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.36986301369863, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 47.0, 
+          "submitter_id": "TCGA-44-2657_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "51a5b058-8e1f-5b50-a568-798c72fe813b", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "71a7f834-efce-4ff3-9e97-b680a68e7b2e", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUAD.tissue_images.Level_1.52.7.0.tar.gz", 
+    "md5sum": "498ff8078f1c66cc993ba31e71a85441", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUAD.tissue_images.Level_1.52", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 7021562094, 
+    "file_state": "submitted", 
+    "revision": 7
+  }
+},{
+  "md5sum": "ad6f1776fb9be18001249fc97c320bd3", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-18-3408-01A-01-TS1.4d318c39-fdb4-4dd3-959f-e6d3f54ce0b4.svs", 
+  "file_size": 18584417, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "b73849d4-0532-4d85-8f4f-70f84b6473eb", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "4d318c39-fdb4-4dd3-959f-e6d3f54ce0b4", 
+      "case_id": "d4bc755a-2585-4529-ae36-7e1d88bdecfe", 
+      "entity_submitter_id": "TCGA-18-3408-01A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.3", 
+          "submitter_id": "TCGA-18-3408_diagnosis", 
+          "tumor_stage": "stage ib", 
+          "age_at_diagnosis": 28171.0, 
+          "vital_status": "dead", 
+          "morphology": "8070/3", 
+          "days_to_death": 2304.0, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "ac94a1ac-de25-5131-b355-3bb9e7d47839", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-18-3408_treatment", 
+              "treatment_id": "17aae413-8687-5b63-8848-7ab003b59d3e", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.3", 
+          "days_to_birth": -28171.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.3", 
+          "days_to_last_follow_up": 2099.0
+        }
+      ], 
+      "disease_type": "Lung Squamous Cell Carcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1927, 
+        "submitter_id": "TCGA-18-3408_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "97f72156-675d-5a16-89e9-94296a9aea85", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-18-3408", 
+      "project": {
+        "project_id": "TCGA-LUSC"
+      }, 
+      "state": "live", 
+      "case_id": "d4bc755a-2585-4529-ae36-7e1d88bdecfe", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-18-3408-01A", 
+          "intermediate_dimension": "0.4", 
+          "sample_id": "eeffadf9-2ccb-4937-ae1e-1d50aba41c4d", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "ef586d16-0c67-42db-9d31-86df9476d49d", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.3", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1264723200, 
+              "portion_number": "01", 
+              "weight": 96.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-18-3408-01A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 90.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-18-3408-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 2.0, 
+                  "slide_id": "4d318c39-fdb4-4dd3-959f-e6d3f54ce0b4", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 8.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 90.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 85.0, 
+                  "percent_lymphocyte_infiltration": 3.0, 
+                  "submitter_id": "TCGA-18-3408-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 10.0, 
+                  "slide_id": "6da3d3b3-e891-4922-9135-70fc9cf8959f", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 10.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 80.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "ec9f9a06-02a2-4ead-a470-9b7943aa18d1", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "0.5"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.643835616438356, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": null, 
+          "submitter_id": "TCGA-18-3408_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "bc9c21d2-671e-5690-b2bf-4c80cdfffa41", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "97c1af16-1b50-4c48-89b9-6698db3d0ae6", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUSC.tissue_images.Level_1.39.10.0.tar.gz", 
+    "md5sum": "1d0809c70f6ef19701f53c01699698e2", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUSC.tissue_images.Level_1.39", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 9396604848, 
+    "file_state": "submitted", 
+    "revision": 10
+  }
+},{
+  "md5sum": "dbcbaf991f439e6064fb066400f40d29", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-67-3774-01A-01-BS1.31cac0af-cd13-46e7-9383-505da43384a4.svs", 
+  "file_size": 24836367, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "dd54d66f-1450-46ec-aae9-361b3bed9eca", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "31cac0af-cd13-46e7-9383-505da43384a4", 
+      "case_id": "36ad7fc7-0cc1-4f01-aef1-f89b3cb4feac", 
+      "entity_submitter_id": "TCGA-67-3774-01A-01-BS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.3", 
+          "submitter_id": "TCGA-67-3774_diagnosis", 
+          "tumor_stage": "stage ib", 
+          "age_at_diagnosis": 26704.0, 
+          "vital_status": "alive", 
+          "morphology": "8140/3", 
+          "days_to_death": null, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "7eea3d05-c171-5706-baea-d2c1cb1179ef", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-67-3774_treatment", 
+              "treatment_id": "248f4d0e-1fd4-52a9-a2fc-4d1e060a3fb1", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.3", 
+          "days_to_birth": -26704.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.3", 
+          "days_to_last_follow_up": 385.0
+        }
+      ], 
+      "disease_type": "Lung Adenocarcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1936, 
+        "submitter_id": "TCGA-67-3774_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "dc8df7d5-f087-5c8f-b2b7-2edaf2b11cb9", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-67-3774", 
+      "project": {
+        "project_id": "TCGA-LUAD"
+      }, 
+      "state": "live", 
+      "case_id": "36ad7fc7-0cc1-4f01-aef1-f89b3cb4feac", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-67-3774-01A", 
+          "intermediate_dimension": "0.4", 
+          "sample_id": "b3585415-9ab9-4614-8b15-8edb66efd1dc", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "a1d72b00-7384-4a8f-b335-5beb9ae078fc", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.2", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1266883200, 
+              "portion_number": "01", 
+              "weight": 61.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-67-3774-01A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 1.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 80.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-67-3774-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "f67c6f27-e04e-4f4e-b438-12f5ffbb578d", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 5.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 94.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 3.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 75.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-67-3774-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "31cac0af-cd13-46e7-9383-505da43384a4", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 5.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 92.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "83642962-4366-4917-a0ae-fc78ed7fbc5d", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "0.5"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": null, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": null, 
+          "submitter_id": "TCGA-67-3774_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "2e95ff1a-c26d-542e-9922-ef004446058a", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "7f063189-7bd8-43ae-8997-27db662be291", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUAD.tissue_images.Level_1.37.7.0.tar.gz", 
+    "md5sum": "8fc4a99d28460ff88c154c5bcf5e1f66", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUAD.tissue_images.Level_1.37", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 8425218033, 
+    "file_state": "submitted", 
+    "revision": 7
+  }
+},{
+  "md5sum": "33dd4fe26955bc885c1b24f727b1ad1c", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-52-7810-01A-01-TS1.42a4fb5e-ca1f-4441-bea7-65bfd2eb2f19.svs", 
+  "file_size": 9988399, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "0a189903-aec3-425a-a4b7-fcb51abe78bd", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "42a4fb5e-ca1f-4441-bea7-65bfd2eb2f19", 
+      "case_id": "98b86f94-9ede-45ab-ba09-19a6ec6d9494", 
+      "entity_submitter_id": "TCGA-52-7810-01A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.8", 
+          "submitter_id": "TCGA-52-7810_diagnosis", 
+          "tumor_stage": "stage iib", 
+          "age_at_diagnosis": 22241.0, 
+          "vital_status": "alive", 
+          "morphology": "8070/3", 
+          "days_to_death": null, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "2d80e870-2c0e-5c68-81db-78c6d9865bbf", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-52-7810_treatment", 
+              "treatment_id": "13b7d1d3-f0ac-50cb-858a-f70e8a97eefc", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.8", 
+          "days_to_birth": -22241.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.8", 
+          "days_to_last_follow_up": 923.0
+        }
+      ], 
+      "disease_type": "Lung Squamous Cell Carcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1948, 
+        "submitter_id": "TCGA-52-7810_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "8aa48614-04fe-5a4b-96bb-e9dbb4b16205", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-52-7810", 
+      "project": {
+        "project_id": "TCGA-LUSC"
+      }, 
+      "state": "live", 
+      "case_id": "98b86f94-9ede-45ab-ba09-19a6ec6d9494", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-52-7810-01A", 
+          "intermediate_dimension": "0.7", 
+          "sample_id": "2ea5aecb-000e-45b3-93fc-897705ea38a4", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "2da4232b-8a69-480f-a5f1-671cc7ed5213", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.4", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1321833600, 
+              "portion_number": "11", 
+              "weight": 33.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-52-7810-01A-11", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": 2.0, 
+                  "percent_monocyte_infiltration": 5.0, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 61.0, 
+                  "percent_lymphocyte_infiltration": 10.0, 
+                  "submitter_id": "TCGA-52-7810-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 2.0, 
+                  "slide_id": "ce43c735-840c-4f4a-88d3-d79b66d666d8", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 0.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 98.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 20.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 70.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-52-7810-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 0.0, 
+                  "slide_id": "42a4fb5e-ca1f-4441-bea7-65bfd2eb2f19", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 0.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 80.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "f4fa31d2-9c35-46b1-a68f-0ce8ffea64bc", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "0.8"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.095890410958904, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 20.0, 
+          "submitter_id": "TCGA-52-7810_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "872af6de-58da-5748-ad7c-7b54cb9c669c", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "de92f5b9-dfa7-486d-8cad-440f5f402641", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUSC.tissue_images.Level_1.193.5.0.tar.gz", 
+    "md5sum": "942227c27b1cb04391fa3789793b5ae3", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUSC.tissue_images.Level_1.193", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 16911976842, 
+    "file_state": "submitted", 
+    "revision": 5
+  }
+},{
+  "md5sum": "ed8d75c7dfbadec4b2b2df0f37d3a0df", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "archive": {
+    "archive_id": "7f063189-7bd8-43ae-8997-27db662be291", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUAD.tissue_images.Level_1.37.7.0.tar.gz", 
+    "md5sum": "8fc4a99d28460ff88c154c5bcf5e1f66", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUAD.tissue_images.Level_1.37", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 8425218033, 
+    "file_state": "submitted", 
+    "revision": 7
+  }, 
+  "file_name": "TCGA-44-2655-11A-01-TS1.1f824b99-5455-4bab-b491-e993d9f370af.svs", 
+  "file_size": 18249575, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "48e4bffe-4139-4c15-9d32-5a5f645d0d03", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "1f824b99-5455-4bab-b491-e993d9f370af", 
+      "case_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "entity_submitter_id": "TCGA-44-2655-11A-01-TS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.1", 
+          "submitter_id": "TCGA-44-2655_diagnosis", 
+          "tumor_stage": "stage ia", 
+          "age_at_diagnosis": 23854.0, 
+          "vital_status": "alive", 
+          "morphology": "8140/3", 
+          "days_to_death": null, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "5672187c-4648-5de5-8cad-903c919ef1f8", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-44-2655_treatment", 
+              "treatment_id": "212f9202-90a1-55ab-aaac-51271c5d03b0", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.1", 
+          "days_to_birth": -23854.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.1", 
+          "days_to_last_follow_up": 1324.0
+        }
+      ], 
+      "disease_type": "Lung Adenocarcinoma", 
+      "updated_datetime": "2017-03-09T11:20:32.720289-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1944, 
+        "submitter_id": "TCGA-44-2655_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "20d4b4f8-697e-5657-acea-ce48bceca1d9", 
+        "ethnicity": "not hispanic or latino", 
+        "year_of_death": null
+      }, 
+      "submitter_id": "TCGA-44-2655", 
+      "project": {
+        "project_id": "TCGA-LUAD"
+      }, 
+      "state": "live", 
+      "case_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "11", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-44-2655-11A", 
+          "intermediate_dimension": "0.6", 
+          "sample_id": "298662ad-dbff-4344-9b80-d744c258c292", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": null, 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Solid Tissue Normal", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.4", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1292457600, 
+              "portion_number": "01", 
+              "weight": 61.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-44-2655-11A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": null, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": null, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-44-2655-11A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": null, 
+                  "slide_id": "1f824b99-5455-4bab-b491-e993d9f370af", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": null, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": null
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "6f5a6c39-5a2b-4803-8728-ec1c6a717297", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "1"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.643835616438356, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 30.0, 
+          "submitter_id": "TCGA-44-2655_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "74b0ae75-22e9-599b-809c-efd382a1d9cd", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "annotations": [
+    {
+      "category": "Pathology outside specification", 
+      "status": "Rescinded", 
+      "entity_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "classification": "Notification", 
+      "entity_type": "case", 
+      "created_datetime": "2010-09-02T00:00:00", 
+      "annotation_id": "333da618-397c-536d-9656-de5f8f278ea7", 
+      "notes": "[intgen.org]: Pathology Results off Spec", 
+      "updated_datetime": "2017-03-09T13:36:45.890983-06:00", 
+      "submitter_id": "649", 
+      "state": "submitted", 
+      "case_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "entity_submitter_id": "TCGA-44-2655"
+    }, 
+    {
+      "category": "Pathology outside specification", 
+      "status": "Rescinded", 
+      "entity_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "classification": "Notification", 
+      "entity_type": "case", 
+      "created_datetime": "2010-09-02T00:00:00", 
+      "annotation_id": "0088ea21-805c-50e6-a97c-717bf3ee0cd4", 
+      "notes": "This annotation was rescinded by jensenma on 12/14/11 12:07 PM", 
+      "updated_datetime": "2017-03-09T13:36:45.890983-06:00", 
+      "submitter_id": "649", 
+      "state": "submitted", 
+      "case_id": "07b5663f-9a54-4462-b6c1-6fc8116b8714", 
+      "entity_submitter_id": "TCGA-44-2655"
+    }
+  ]
+},{
+  "md5sum": "d842e11ea0863d65ec643c339ad3ff73", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-22-4596-11A-01-BS1.dec4a7e7-063b-44e0-9ae7-e93d00486819.svs", 
+  "file_size": 14466567, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "c9e2c6a3-0007-42d0-9e84-0417f9a5ef6f", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "dec4a7e7-063b-44e0-9ae7-e93d00486819", 
+      "case_id": "d4608593-20cb-4b53-b037-39aa8ddd05b7", 
+      "entity_submitter_id": "TCGA-22-4596-11A-01-BS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.1", 
+          "submitter_id": "TCGA-22-4596_diagnosis", 
+          "tumor_stage": "stage ib", 
+          "age_at_diagnosis": 25448.0, 
+          "vital_status": "dead", 
+          "morphology": "8070/3", 
+          "days_to_death": 17.0, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "adfd134c-b0c7-5533-bf7c-58e0e1ad4128", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-22-4596_treatment", 
+              "treatment_id": "412d5db9-4718-54d8-84bb-17eac7340f64", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.1", 
+          "days_to_birth": -25448.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.1", 
+          "days_to_last_follow_up": 17.0
+        }
+      ], 
+      "disease_type": "Lung Squamous Cell Carcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1933, 
+        "submitter_id": "TCGA-22-4596_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "7e4039c0-ce5e-5b43-bfcb-8a14a27e7daf", 
+        "ethnicity": "not reported", 
+        "year_of_death": 2002
+      }, 
+      "submitter_id": "TCGA-22-4596", 
+      "project": {
+        "project_id": "TCGA-LUSC"
+      }, 
+      "state": "live", 
+      "case_id": "d4608593-20cb-4b53-b037-39aa8ddd05b7", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "11", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-22-4596-11A", 
+          "intermediate_dimension": "0.5", 
+          "sample_id": "eafc1414-5c95-4f5a-8aa5-db4663045364", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": null, 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Solid Tissue Normal", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.1", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1278374400, 
+              "portion_number": "01", 
+              "weight": 64.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-22-4596-11A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": null, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": null, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-22-4596-11A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": null, 
+                  "slide_id": "dec4a7e7-063b-44e0-9ae7-e93d00486819", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": null, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": null
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": null, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": null, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-22-4596-11A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": null, 
+                  "slide_id": "5ae4b08f-88d7-4b5f-b29d-fd802d47668d", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": null, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": null
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "818e5f8f-06e5-46f0-898c-620e03ea8779", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "1.3"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 2.191780821917808, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 40.0, 
+          "submitter_id": "TCGA-22-4596_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "cb82db9f-c29f-53fc-bc6c-e178a3ef5956", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "12583ddc-ffea-4c96-9351-c2ade74984d8", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUSC.tissue_images.Level_1.60.5.0.tar.gz", 
+    "md5sum": "12184569918f35919a4c747fc4cf9643", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUSC.tissue_images.Level_1.60", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 7367200727, 
+    "file_state": "submitted", 
+    "revision": 5
+  }
+},{
+  "md5sum": "c23e14561b99f83c622f77739627196a", 
+  "center": {
+    "code": "36", 
+    "name": "Nationwide Children's Hospital BCR", 
+    "short_name": "NCH", 
+    "center_id": "a6b3bcf1-9ca6-56e9-8f04-0e3a63e60a6a", 
+    "namespace": "nationwidechildrens.org", 
+    "center_type": "BCR"
+  }, 
+  "data_type": "Tissue slide image", 
+  "tags": [
+    "image"
+  ], 
+  "file_name": "TCGA-22-4613-01A-01-BS1.34466ecb-c090-4b9e-86ab-d0d4ad67969e.svs", 
+  "file_size": 21460629, 
+  "data_format": "SVS", 
+  "submitter_id": null, 
+  "access": "open", 
+  "platform": "Clinical", 
+  "state": "live", 
+  "file_id": "967da61d-3f66-4eac-a2ce-a8a1858ca70d", 
+  "data_category": "Clinical", 
+  "associated_entities": [
+    {
+      "entity_id": "34466ecb-c090-4b9e-86ab-d0d4ad67969e", 
+      "case_id": "2c8877f9-ee7f-4216-97ad-d2939a13daa4", 
+      "entity_submitter_id": "TCGA-22-4613-01A-01-BS1", 
+      "entity_type": "slide"
+    }
+  ], 
+  "cases": [
+    {
+      "diagnoses": [
+        {
+          "classification_of_tumor": "not reported", 
+          "last_known_disease_status": "not reported", 
+          "updated_datetime": "2017-03-04T16:44:35.784223-06:00", 
+          "primary_diagnosis": "c34.1", 
+          "submitter_id": "TCGA-22-4613_diagnosis", 
+          "tumor_stage": "stage ia", 
+          "age_at_diagnosis": 26722.0, 
+          "vital_status": "dead", 
+          "morphology": "8070/3", 
+          "days_to_death": 358.0, 
+          "days_to_last_known_disease_status": null, 
+          "created_datetime": null, 
+          "state": "live", 
+          "days_to_recurrence": null, 
+          "diagnosis_id": "fd6a72e8-83ec-54f9-aa78-8c9d2ff1eba5", 
+          "tumor_grade": "not reported", 
+          "treatments": [
+            {
+              "updated_datetime": "2017-03-04T16:43:59.646072-06:00", 
+              "created_datetime": null, 
+              "therapeutic_agents": null, 
+              "submitter_id": "TCGA-22-4613_treatment", 
+              "treatment_id": "acf657a2-7d43-5cbb-a727-f1bd4bd5ce69", 
+              "state": "live", 
+              "days_to_treatment": null, 
+              "treatment_intent_type": null, 
+              "treatment_or_therapy": null
+            }
+          ], 
+          "tissue_or_organ_of_origin": "c34.1", 
+          "days_to_birth": -26722.0, 
+          "progression_or_recurrence": "not reported", 
+          "prior_malignancy": "not reported", 
+          "site_of_resection_or_biopsy": "c34.1", 
+          "days_to_last_follow_up": 358.0
+        }
+      ], 
+      "disease_type": "Lung Squamous Cell Carcinoma", 
+      "updated_datetime": "2017-03-04T16:39:19.244769-06:00", 
+      "created_datetime": null, 
+      "demographic": {
+        "updated_datetime": "2017-03-04T16:37:28.862150-06:00", 
+        "created_datetime": null, 
+        "gender": "female", 
+        "year_of_birth": 1931, 
+        "submitter_id": "TCGA-22-4613_demographic", 
+        "state": "live", 
+        "race": "white", 
+        "demographic_id": "03741f01-6fe4-50b5-89bd-fd08dd15ca3d", 
+        "ethnicity": "not reported", 
+        "year_of_death": 2004
+      }, 
+      "submitter_id": "TCGA-22-4613", 
+      "project": {
+        "project_id": "TCGA-LUSC"
+      }, 
+      "state": "live", 
+      "case_id": "2c8877f9-ee7f-4216-97ad-d2939a13daa4", 
+      "primary_site": "Lung", 
+      "samples": [
+        {
+          "sample_type_id": "01", 
+          "updated_datetime": "2017-03-04T16:37:25.946840-06:00", 
+          "time_between_excision_and_freezing": null, 
+          "oct_embedded": null, 
+          "tumor_code_id": null, 
+          "submitter_id": "TCGA-22-4613-01A", 
+          "intermediate_dimension": "0.8", 
+          "sample_id": "4e11ad69-d473-4433-822f-276dd3b5ca63", 
+          "is_ffpe": false, 
+          "pathology_report_uuid": "bbb6127c-7368-415d-b984-65e21e23c03a", 
+          "created_datetime": null, 
+          "tumor_descriptor": null, 
+          "sample_type": "Primary Tumor", 
+          "state": "live", 
+          "current_weight": null, 
+          "composition": null, 
+          "time_between_clamping_and_freezing": null, 
+          "shortest_dimension": "0.3", 
+          "tumor_code": null, 
+          "tissue_type": null, 
+          "days_to_sample_procurement": null, 
+          "freezing_method": null, 
+          "portions": [
+            {
+              "creation_datetime": 1278374400, 
+              "portion_number": "01", 
+              "weight": 99.0, 
+              "updated_datetime": "2017-03-04T16:37:25.884855-06:00", 
+              "created_datetime": null, 
+              "submitter_id": "TCGA-22-4613-01A-01", 
+              "slides": [
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 65.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-22-4613-01A-01-TS1", 
+                  "state": "live", 
+                  "section_location": "TOP", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 10.0, 
+                  "slide_id": "8493c28d-f0fe-4431-83ab-d6e648ac1951", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 15.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 75.0
+                }, 
+                {
+                  "percent_neutrophil_infiltration": null, 
+                  "percent_monocyte_infiltration": null, 
+                  "percent_normal_cells": 0.0, 
+                  "updated_datetime": "2017-03-04T16:37:25.730133-06:00", 
+                  "created_datetime": null, 
+                  "percent_eosinophil_infiltration": null, 
+                  "percent_tumor_nuclei": 70.0, 
+                  "percent_lymphocyte_infiltration": null, 
+                  "submitter_id": "TCGA-22-4613-01A-01-BS1", 
+                  "state": "live", 
+                  "section_location": "BOTTOM", 
+                  "percent_granulocyte_infiltration": null, 
+                  "percent_necrosis": 15.0, 
+                  "slide_id": "34466ecb-c090-4b9e-86ab-d0d4ad67969e", 
+                  "number_proliferating_cells": null, 
+                  "percent_stromal_cells": 10.0, 
+                  "percent_inflam_infiltration": null, 
+                  "percent_tumor_cells": 75.0
+                }
+              ], 
+              "state": "live", 
+              "portion_id": "711e31f7-73ee-42c1-a65c-bdd79883f260", 
+              "is_ffpe": false
+            }
+          ], 
+          "preservation_method": null, 
+          "days_to_collection": null, 
+          "initial_weight": null, 
+          "longest_dimension": "1.1"
+        }
+      ], 
+      "exposures": [
+        {
+          "cigarettes_per_day": 1.643835616438356, 
+          "weight": null, 
+          "updated_datetime": "2017-03-04T16:37:25.850486-06:00", 
+          "alcohol_history": null, 
+          "alcohol_intensity": null, 
+          "bmi": null, 
+          "years_smoked": 30.0, 
+          "submitter_id": "TCGA-22-4613_exposure", 
+          "created_datetime": null, 
+          "state": "live", 
+          "exposure_id": "8922340d-052a-5fb6-bb71-fae4188da0f4", 
+          "height": null
+        }
+      ]
+    }
+  ], 
+  "archive": {
+    "archive_id": "fe2d8e49-550b-445f-97b2-418e51aa7e40", 
+    "data_type": "TCGA DCC Archive", 
+    "updated_datetime": "2017-03-04T16:43:58.641267-06:00", 
+    "file_name": "nationwidechildrens.org_LUSC.tissue_images.Level_1.77.2.0.tar.gz", 
+    "md5sum": "80e39fdc10940d1c38b7626d54e2776b", 
+    "data_format": "TARGZ", 
+    "submitter_id": "nationwidechildrens.org_LUSC.tissue_images.Level_1.77", 
+    "state": "live", 
+    "data_category": "Archive", 
+    "file_size": 17254500985, 
+    "file_state": "submitted", 
+    "revision": 2
+  }
+}]

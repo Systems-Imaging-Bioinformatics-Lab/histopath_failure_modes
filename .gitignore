@@ -7,4 +7,8 @@ playground/
 .snakemake*
 checkpoints/
 .vscode/
-work/
+work/intermediate
+work/output
+*.svs
+*logs*
+*annotations.txt
