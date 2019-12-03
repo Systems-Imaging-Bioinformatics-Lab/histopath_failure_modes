@@ -9,13 +9,19 @@ output_dir = Path("work/output/")
 src_path = Path("DeepPATH/DeepPATH_code/").absolute()
 ckpt = "run2a_3D_classifier/"
 
+experiment_dataset = "phase1_exp"
+N_EXPERIMENTS = 50
+exp_types = ['bubbles','marker','fold','sectioning','illumination']
+SEED = 42
 wildcard_constraints:
         dataset="\w+"
 
-datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()]
-rule all:
-    input: expand(str(output_dir / "{dataset}"),dataset=datasets)
+exp_dirs = [f"exp_{exp_type}" for exp_type in exp_types]
+datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()] + exp_dirs
 
+
+rule all:
+    input: expand(str(output_dir / "{dataset}" / "auc"),dataset=datasets)
 
 rule tile_images:
     input: directory(str(input_dir / "{dataset}"))
@@ -40,7 +46,7 @@ rule combine_jpeg_dir:
         python '{src_path}/00_preprocessing/0d_SortTiles.py' --SourceFolder='../tiles' --Magnification=20.0  --MagDiffAllowed=0 --SortingOption=3  --PatientID=12 --nSplit 0 --JsonFile='{input.metadata}' --PercentTest=100 --PercentValid=0
         """
 rule make_tf_record:
-    input: rules.combine_jpeg_dir.output
+    input: str(intermeiate_dir /  "{dataset}"  /"combine_jpg/")
     output: directory(str(intermeiate_dir / "{dataset}" / "tf_records/"))
     shell:
         """
@@ -64,4 +70,26 @@ rule agg_results:
         """
         mkdir -p {output}
         python '{src_path}/03_postprocessing/0h_ROC_MultiOutput_BootStrap.py'  --file_stats {input}  --output_dir {output} --labels_names '{src_path}/example_TCGA_lung/labelref_r1.txt' --ref_stats '' 
+        """
+
+rule manipulate_tiles:
+    input: 
+        jpgs=str(intermeiate_dir / experiment_dataset / "combine_jpg/")    
+    output: 
+        data=directory(str(intermeiate_dir / "exp_{exp_type}" / "combine_jpg")),
+        logs=str(intermeiate_dir/"logs"/"{exp_type}_files.txt")
+    shell:
+        """
+        rm -f {output.logs}
+        cp -r {input.jpgs} {output.data}
+        for stype in $(ls {output.data})
+        do
+            echo "$stype {wildcards.exp_type} {SEED}" > .seed.txt
+            for image in $(ls {output.data}/$stype/ | sort -t " " -R --random-source=.seed.txt | head -n {N_EXPERIMENTS})
+            do
+                image_file={output.data}/$stype/$image
+                echo $image_file >> {output.logs}
+                python image_manipulation/img_manip.py $image_file {wildcards.exp_type} $image_file
+            done
+        done
         """
