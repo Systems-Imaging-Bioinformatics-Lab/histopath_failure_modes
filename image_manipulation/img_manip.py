@@ -96,7 +96,7 @@ def rand_gauss(dim,zeroToOne = False, maxCov = 50, nNorms = 25, random_seed = No
 
 def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
               width = 50, alpha = .75, rgbVal= None,
-              rgbRange = np.array([[0,100],[0,100],[0,100]])):
+              rgbRange = np.array([[0,50],[0,50],[0,100]])):
     np.random.seed(seed=random_seed)
     if rgbVal is None:
         rgbVal = np.zeros((3,1))
