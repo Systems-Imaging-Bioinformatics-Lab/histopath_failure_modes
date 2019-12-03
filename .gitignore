@@ -9,3 +9,6 @@ checkpoints/
 .vscode/
 work/intermediate
 work/output
+*.svs
+*logs*
+*annotations.txt
