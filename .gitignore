@@ -7,4 +7,5 @@ playground/
 .snakemake*
 checkpoints/
 .vscode/
-work/
+work/intermediate
+work/output
