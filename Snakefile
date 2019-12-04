@@ -11,14 +11,19 @@ ckpt = "run2a_3D_classifier/"
 
 experiment_dataset = "phase1_exp"
 N_EXPERIMENTS = 50
-exp_types = ['bubbles','marker','fold','sectioning','illumination']
+experiments = {
+    "bubbles" : [100,20],
+    "marker" : [15,80],
+    "fold": [20],
+    "sectioning": [15,30],
+    "illumination" : [100,50,10]
+}
+exp_datasets = [f"exp_{exp_type}_{percent}"  for exp_type,percents in experiments.items() for percent in percents ]
 SEED = 42
 wildcard_constraints:
         dataset="\w+"
 
-exp_dirs = [f"exp_{exp_type}" for exp_type in exp_types]
-datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()] + exp_dirs
-
+datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()] + exp_datasets
 
 rule all:
     input: expand(str(output_dir / "{dataset}" / "auc"),dataset=datasets)
@@ -31,8 +36,9 @@ rule tile_images:
         python '{src_path}/00_preprocessing/0b_tileLoop_deepzoom4.py'  -s 512 -e 0 -j 32 -B 50 -M 20 -o {output} "{input}/*/*svs"  
         """
 def find_metadata(wc):
-    metadatas = [str(p.absolute()) for p in (input_dir / wc.dataset).glob("metadata.*.json")]
-    return metadatas
+    if wc.dataset.startswith("exp"):
+        return [str(p.absolute()) for p in (input_dir / experiment_dataset).glob("metadata.*.json")]
+    [str(p.absolute()) for p in (input_dir / wc.dataset).glob("metadata.*.json")]
 rule combine_jpeg_dir:
     input: 
         tiles=rules.tile_images.output,
@@ -74,20 +80,22 @@ rule agg_results:
 
 rule manipulate_tiles:
     input: 
-        jpgs=str(intermeiate_dir / experiment_dataset / "combine_jpg/")    
+        jpgs=str(intermeiate_dir / experiment_dataset / "tiles/")    
     output: 
-        data=directory(str(intermeiate_dir / "exp_{exp_type}" / "combine_jpg")),
-        logs=str(intermeiate_dir/"logs"/"{exp_type}_files.txt")
+        data=directory(str(intermeiate_dir / "exp_{exp_type}_{percent}" / "tiles/")),
+        logs=str(output_dir/"manipulation_logs"/"{exp_type}_{percent}.txt")
     shell:
         """
         rm -f {output.logs}
         cp -r {input.jpgs} {output.data}
-        for stype in $(ls {output.data})
+        for slide in $(ls -d {output.data}/*/)
         do
-            echo "$stype {wildcards.exp_type} {SEED}" > .seed.txt
-            for image in $(ls {output.data}/$stype/ | sort -t " " -R --random-source=.seed.txt | head -n {N_EXPERIMENTS})
+            echo "$slide {wildcards.exp_type} {SEED}" > .seed.txt
+            n_tiles=$(ls $slide/20.0/ | wc -l)
+            n_changes=$(echo "$n_tiles*{wildcards.percent}/100" | bc)
+            for image in $(ls $slide/20.0/ | sort -t " " -R --random-source=.seed.txt | head -n $n_changes)
             do
-                image_file={output.data}/$stype/$image
+                image_file=$slide/20.0/$image
                 echo $image_file >> {output.logs}
                 python image_manipulation/img_manip.py $image_file {wildcards.exp_type} $image_file
             done
