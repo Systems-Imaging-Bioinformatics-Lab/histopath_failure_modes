@@ -67,9 +67,9 @@ def rand_gauss(dim,zeroToOne = False, maxCov = 50, nNorms = 25, random_seed = No
         yV = np.arange(dim[1])
         
         if minMaxX is None:
-            minMaxX = [0,invDim[0]]
+            minMaxX = [0,dim[0]]
         if minMaxY is None:
-            minMaxY = [0,invDim[1]]
+            minMaxY = [0,dim[1]]
 
     xM, yM = np.meshgrid(xV,yV)
     pos = np.dstack((xM, yM))
