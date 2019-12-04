@@ -64,4 +64,25 @@ def parse_tile_probs(path):
     """Parse tile level probabilities (out_filename_Stats.txt)
     """
     entries = []
-    
+    with open(path,"r") as f:
+        for line in f.readlines():
+            entry = {}
+            fields = line.split("\t")
+            name_parsed = re.findall(r"test_(.*)_(\d+_\d+).dat",fields[0])[0]
+            entry["name"] = name_parsed[0]
+            entry["tile"] = name_parsed[1]
+            entry["correct_class"] = bool(fields[1])
+            probs = re.findall(r".*(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+).*",fields[2])[0][1:]
+            entry["prob_normal"] = float(probs[0])
+            entry["prob_luad"] = float(probs[1])
+            entry["prob_lusc"] = float(probs[2])
+            entry["corrected_true_prob"] = float(fields[3])
+            true_class = int(fields[5])
+            if true_class==1:
+                entry["class"] = "Normal"
+            elif true_class==2:
+                entry["class"] = "LUAD"
+            else:
+                entry["class"] = "LUSC"
+            entries.append(entry)
+    return entries
