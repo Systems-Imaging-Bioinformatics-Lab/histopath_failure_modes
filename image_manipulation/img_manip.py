@@ -115,14 +115,14 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     
 #     print(nPts)
     
-    mask = np.ones(dim)
+    mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
     bw_dist = morphology.distance_transform_edt(mask)
 
     bw_reg = bw_dist <= width
     im_rgba = inputIm.convert("RGBA")
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
-    color_arr = np.zeros((dim[0],dim[1],3),dtype=np.uint8)
+    color_arr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
     for i in range(len(rgbVal)):
         color_arr[:,:,i] = rgbVal[i]
     color_layer = Image.fromarray(color_arr,'RGB')
@@ -190,7 +190,7 @@ def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =Non
     warp_im = warpPerspective(samp_pad_arr,M,dim)
 
     #
-    mask = np.ones(dim)
+    mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
     bw_dist = morphology.distance_transform_edt(mask)
     if randEdge == True:
@@ -229,7 +229,7 @@ def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5,
         else:
             sampSpl = rand_spline(dim, nPts = 2, endEdge = -2,random_seed = random_seed)
 
-    mask = np.ones(dim)
+    mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
     bw_dist = morphology.distance_transform_edt(mask)
     if randEdge == True:
@@ -271,7 +271,7 @@ def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = 
     edge_area = np.logical_and(bw_dist <= edgeWidth,bw_reg)
 
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
-    color_arr = np.zeros((dim[0],dim[1],3),dtype=np.uint8)
+    color_arr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
 
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
