@@ -38,7 +38,7 @@ rule tile_images:
 def find_metadata(wc):
     if wc.dataset.startswith("exp"):
         return [str(p.absolute()) for p in (input_dir / experiment_dataset).glob("metadata.*.json")]
-    [str(p.absolute()) for p in (input_dir / wc.dataset).glob("metadata.*.json")]
+    return [str(p.absolute()) for p in (input_dir / wc.dataset).glob("metadata.*.json")]
 rule combine_jpeg_dir:
     input: 
         tiles=rules.tile_images.output,
@@ -83,10 +83,13 @@ rule manipulate_tiles:
         jpgs=str(intermeiate_dir / experiment_dataset / "tiles/")    
     output: 
         data=directory(str(intermeiate_dir / "exp_{exp_type}_{percent}" / "tiles/")),
-        logs=str(output_dir/"manipulation_logs"/"{exp_type}_{percent}.txt")
+    log:
+        modified_tiles=str(output_dir/"manipulation_logs"/"{exp_type}_{percent}.txt"),
+        bad_tiles=str(intermeiate_dir / "exp_{exp_type}_{percent}" / "log_bad_images.txt")
     shell:
         """
-        rm -f {output.logs}
+        rm -f {log.modified_tiles}
+        rm -f {log.bad_tiles}
         cp -r {input.jpgs} {output.data}
         for slide in $(ls -d {output.data}/*/)
         do
@@ -96,8 +99,16 @@ rule manipulate_tiles:
             for image in $(ls $slide/20.0/ | sort -t " " -R --random-source=.seed.txt | head -n $n_changes)
             do
                 image_file=$slide/20.0/$image
-                echo $image_file >> {output.logs}
-                python image_manipulation/img_manip.py $image_file {wildcards.exp_type} $image_file
+                set +e
+                python image_manipulation/img_manip.py $image_file {wildcards.exp_type} $image_file 2>{log.bad_tiles} 
+                exitcode=$?
+                if [ $exitcode -gt 0 ]
+                then
+                    echo $image_file >> {log.bad_tiles}
+                    echo "bad image: $image_file"
+                else
+                    echo $image_file >> {log.modified_tiles}
+                fi
             done
         done
         """
