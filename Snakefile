@@ -26,7 +26,7 @@ wildcard_constraints:
 datasets = [ds.stem for ds in input_dir.iterdir() if ds.is_dir()] + exp_datasets
 
 rule all:
-    input: expand(str(output_dir / "{dataset}" / "auc"),dataset=datasets)
+    input: expand(str(output_dir / "{dataset}" / "auc_summary.txt"),dataset=datasets)
 
 rule tile_images:
     input: directory(str(input_dir / "{dataset}"))
@@ -76,6 +76,22 @@ rule agg_results:
         """
         mkdir -p {output}
         python '{src_path}/03_postprocessing/0h_ROC_MultiOutput_BootStrap.py'  --file_stats {input}  --output_dir {output} --labels_names '{src_path}/example_TCGA_lung/labelref_r1.txt' --ref_stats '' 
+        """
+
+rule summarise_auc:
+    input: str(output_dir / "{dataset}" / "auc"/ "out2_perSlideStats.txt")
+    output: str(output_dir / "{dataset}" / "auc_summary.txt")
+    shell:
+        """
+        cd $(dirname {input})
+        OUTPUT_DIR=$(dirname {input})
+        rm -f {output}
+        ls -tr out1_roc_data_AvPb_c1*  | sed -e 's/k\/out1_roc_data_AvPb_c1/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
+        ls -tr out1_roc_data_AvPb_c2*  | sed -e 's/k\/out1_roc_data_AvPb_c2/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
+        ls -tr out1_roc_data_AvPb_c3*  | sed -e 's/k\/out1_roc_data_AvPb_c3/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
+        ls -tr out2_roc_data_AvPb_c1*  | sed -e 's/k\/out2_roc_data_AvPb_c1/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
+        ls -tr out2_roc_data_AvPb_c2*  | sed -e 's/k\/out2_roc_data_AvPb_c2/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
+        ls -tr out2_roc_data_AvPb_c3*  | sed -e 's/k\/out2_roc_data_AvPb_c3/ /' | sed -e 's/test_/ /' | sed -e 's/_/ /g' | sed -e 's/.txt//' >> ../auc_summary.txt
         """
 
 rule manipulate_tiles:
