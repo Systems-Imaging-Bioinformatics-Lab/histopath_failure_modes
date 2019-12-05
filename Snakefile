@@ -71,10 +71,10 @@ rule predict:
 
 rule agg_results:
     input: str(output_dir / "{dataset}" / "out_filename_Stats.txt")
-    output:  directory(str(output_dir / "{dataset}" / "auc"))
+    output:  str(output_dir / "{dataset}" / "auc"/ "out2_perSlideStats.txt")
     shell:
         """
-        mkdir -p {output}
+        mkdir -p $(dirname {output})
         python '{src_path}/03_postprocessing/0h_ROC_MultiOutput_BootStrap.py'  --file_stats {input}  --output_dir {output} --labels_names '{src_path}/example_TCGA_lung/labelref_r1.txt' --ref_stats '' 
         """
 
