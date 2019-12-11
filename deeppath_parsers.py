@@ -19,6 +19,7 @@ def parse_auc_file(path):
             entry["auc"] = float(fields[5])
             entry["ci_lower"] = float(fields[7])
             entry["ci_upper"] = float(fields[8])
+            entry["best_thresh"] = float(fields[9][1:])
             entries.append(entry)
     return entries
 def parse_slide_probs(path):
@@ -73,9 +74,9 @@ def parse_tile_probs(path):
             entry["tile"] = name_parsed[1]
             entry["correct_class"] = bool(fields[1])
             probs = re.findall(r".*(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+).*",fields[2])[0][1:]
-            entry["prob_normal"] = float(probs[0])
-            entry["prob_luad"] = float(probs[1])
-            entry["prob_lusc"] = float(probs[2])
+            entry["normal_prob"] = float(probs[0])
+            entry["luad_prob"] = float(probs[1])
+            entry["lusc_prob"] = float(probs[2])
             entry["corrected_true_prob"] = float(fields[3])
             true_class = int(fields[5])
             if true_class==1:
