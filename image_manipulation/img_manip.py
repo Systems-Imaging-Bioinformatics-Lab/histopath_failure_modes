@@ -24,7 +24,7 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
                 edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom
-            inPts[0,LR_v_TB] = LT_V_RB * invDim[LR_v_TB] # one edge or the other
+            inPts[0,LR_v_TB] = LT_V_RB * dim[LR_v_TB] # one edge or the other
         if endEdge == True or (endEdge in range(0,4)) or (endEdge in range(-4,0) and startEdgeFlag):
             if (endEdge in range(0,4)):  # allow for manual specification of edge
                 edgeNum = endEdge
@@ -36,7 +36,7 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
                 edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom    
-            inPts[nPts-1,LR_v_TB] = LT_V_RB * invDim[LR_v_TB] # one edge or the other
+            inPts[nPts-1,LR_v_TB] = LT_V_RB * dim[LR_v_TB] # one edge or the other
         # print(inPts)
     else:
         if isinstance(inPts,list):
