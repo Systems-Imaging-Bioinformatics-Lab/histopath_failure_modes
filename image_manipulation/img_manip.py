@@ -13,8 +13,8 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
 #     print(nPts)
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
     if inPts is None:
-        inPts = np.concatenate((np.random.randint(dim[0],size=(nPts,1)),
-                                 np.random.randint(dim[1],size=(nPts,1))),
+        inPts = np.concatenate((np.random.randint((dim[0]-1),size=(nPts,1)),
+                                 np.random.randint((dim[1]-1),size=(nPts,1))),
                                 axis=1)
         startEdgeFlag = (startEdge == True) or (startEdge in range(0,4))
         if startEdgeFlag == True:
@@ -24,7 +24,8 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
                 edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom
-            inPts[0,LR_v_TB] = LT_V_RB * dim[LR_v_TB] # one edge or the other
+
+            inPts[0,LR_v_TB] = LT_V_RB * (dim[LR_v_TB]-1) # one edge or the other
         if endEdge == True or (endEdge in range(0,4)) or (endEdge in range(-4,0) and startEdgeFlag):
             if (endEdge in range(0,4)):  # allow for manual specification of edge
                 edgeNum = endEdge
@@ -36,7 +37,7 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
                 edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom    
-            inPts[nPts-1,LR_v_TB] = LT_V_RB * dim[LR_v_TB] # one edge or the other
+            inPts[nPts-1,LR_v_TB] = LT_V_RB * (dim[LR_v_TB]-1) # one edge or the other
         # print(inPts)
     else:
         if isinstance(inPts,list):
@@ -46,7 +47,6 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
     distXY = np.sqrt(np.sum(np.diff(inPts,axis=0)**2,axis=1))
     cdXY = np.concatenate((np.zeros((1)),np.cumsum(distXY)),axis=0)
     iDist = np.arange(np.floor(cdXY[-1])+1)
-#     print(max(iDist),cdXY)
     splXY = interpolate.pchip_interpolate(cdXY,inPts,iDist)
     return splXY
 
@@ -116,7 +116,7 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
 #     print(nPts)
     
     mask = np.ones(invDim)
-    mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
+    mask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
     bw_dist = morphology.distance_transform_edt(mask)
 
     bw_reg = bw_dist <= width
