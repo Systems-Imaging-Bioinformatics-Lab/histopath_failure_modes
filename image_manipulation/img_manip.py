@@ -13,8 +13,8 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
 #     print(nPts)
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
     if inPts is None:
-        inPts = np.concatenate((np.random.randint(invDim[0],size=(nPts,1)),
-                                 np.random.randint(invDim[1],size=(nPts,1))),
+        inPts = np.concatenate((np.random.randint(dim[0],size=(nPts,1)),
+                                 np.random.randint(dim[1],size=(nPts,1))),
                                 axis=1)
         startEdgeFlag = (startEdge == True) or (startEdge in range(0,4))
         if startEdgeFlag == True:
