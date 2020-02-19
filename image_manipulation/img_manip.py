@@ -7,6 +7,9 @@ from scipy.stats import multivariate_normal
 from PIL import Image, ImageDraw
 from cv2 import GaussianBlur, blur, getPerspectiveTransform, warpPerspective
 
+from deconvolution import Deconvolution
+import deconvolution.pixeloperations as po
+
 def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,endEdge = True):
     np.random.seed(seed=random_seed)
 
@@ -314,10 +317,56 @@ def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMi
     imLum = imLumHSV.convert("RGB")
     return imLum
 
+def adjust_stain(inputIm,adj_factor = [1,1,1]):
+    
+    dim = inputIm.size # width by height
+    invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
+    iDimRGB = (invDim[0],invDim[1],3)
+    stain_dict = {'eosin':[0.91, 0.38, 0.71], 'null': [0.0, 0.0, 0.0],
+              'hematoxylin': [0.39, 0.47, 0.85]}
+    
+    ## https://deconvolution.readthedocs.io/en/latest/readme.html#two-stain-deconvolution
+#     dec = Deconvolution(image=inputIm, basis=[[0.91, 0.38, 0.71], [0.39, 0.47, 0.85],[0.0, 0.0, 0.0]])
+    dec = Deconvolution(image=inputIm, basis=[stain_dict['eosin'], stain_dict['hematoxylin'],stain_dict['null']])
+
+
+    # this section is extracted from the deconvolution package, but adjusted to allow for altering the stain levels
+    pxO= dec.pixel_operations
+    _white255 = np.array([255, 255, 255], dtype=float)
+    
+    v, u, w = pxO.get_basis()
+    vf, uf, wf = np.zeros(iDimRGB), np.zeros(iDimRGB), np.zeros(iDimRGB)
+    vf[:], uf[:], wf[:] = v, u, w
+    
+    # Produce density matrices for both colors + null. Be aware, as Beer's law do not always hold.
+    a, b, c = map(po._array_positive, dec.out_scalars())
+    af = np.repeat(a, 3).reshape(iDimRGB) * adj_factor[0] # Adjusting the exponential coefficient
+    bf = np.repeat(b, 3).reshape(iDimRGB) * adj_factor[1] # For the different stain components
+    cf = np.repeat(c, 3).reshape(iDimRGB) * adj_factor[2]
+
+    # exponential map, for changing 
+    rgbOut = po._array_to_colour_255(_white255 * (vf ** af) * (uf ** bf) * (wf ** cf))
+    rgb_1 = po._array_to_colour_255(_white255 * (vf ** af))
+    rgb_2 = po._array_to_colour_255(_white255 * (uf ** bf))
+    rgb_3 = po._array_to_colour_255(_white255 * (wf ** cf))
+    
+    return rgbOut,rgb_1,rgb_2,rgb_3
+
+def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5],random_seed = None):
+    if adj_factor is None:
+        np.random.seed(seed=random_seed)
+        rand_exp = np.random.uniform(.25,1,size=(1,3)) * np.random.choice((-1,1), size=(1,3))
+        adj_factor = np.reshape(np.asarray(scale_max),(1,3)) ** rand_exp
+        adj_factor = adj_factor.flatten().tolist()
+    rgbOut,rgb_1,rgb_2,rgb_3 = adjust_stain(inputIm,adj_factor)
+    outIm = Image.fromarray(rgbOut,'RGB')
+    return outIm
+    
+
 def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg"):
     artifactType = artifactType.lower()
     # to remove any linkage between the different types of random addition (e.g. marker vs fold)
-    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5}
+    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6}
     
     inputIm = Image.open(inputImName)
 
@@ -342,6 +391,8 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
         outputIm = add_illumination(inputIm,random_seed = random_seed)
     elif artifactType == "bubbles":
         outputIm = add_bubbles(inputIm,random_seed = random_seed)
+    elif artifactType == "stain":
+        outputIm = add_stain(inputIm,random_seed = random_seed)
     outputSuffix = artifactType[0:4]
     if outputImName is None:
         outputImName = "%s_%s.%s" % (fNameNoExt, outputSuffix, ext)
