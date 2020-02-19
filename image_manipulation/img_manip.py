@@ -352,12 +352,14 @@ def adjust_stain(inputIm,adj_factor = [1,1,1]):
     
     return rgbOut,rgb_1,rgb_2,rgb_3
 
-def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5],random_seed = None):
+def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25,1.25,1],random_seed = None):
     if adj_factor is None:
         np.random.seed(seed=random_seed)
-        rand_exp = np.random.uniform(.25,1,size=(1,3)) * np.random.choice((-1,1), size=(1,3))
-        adj_factor = np.reshape(np.asarray(scale_max),(1,3)) ** rand_exp
+        adj_factor = np.zeros((1,3))
+        for stI in range(len(scale_max)):
+            adj_factor[0,stI] = np.random.uniform(scale_min[stI],scale_max[stI]) ** np.random.choice((-1,1))
         adj_factor = adj_factor.flatten().tolist()
+#         print(adj_factor)
     rgbOut,rgb_1,rgb_2,rgb_3 = adjust_stain(inputIm,adj_factor)
     outIm = Image.fromarray(rgbOut,'RGB')
     return outIm
