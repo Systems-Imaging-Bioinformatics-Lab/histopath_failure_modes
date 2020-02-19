@@ -14,5 +14,8 @@ dependencies:
   - matplotlib
   - jupyter
   - opencv
+  - pip
+  - pip:
+      - deconvolution
 prefix: /Users/jeremykaplan/bin/miniconda3/envs/b590prj
 
