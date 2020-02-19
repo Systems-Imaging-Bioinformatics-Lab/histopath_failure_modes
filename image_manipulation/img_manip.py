@@ -354,8 +354,8 @@ def adjust_stain(inputIm,adj_factor = [1,1,1]):
 
 def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25,1.25,1],random_seed = None):
     if adj_factor is None:
-        np.random.seed(seed=random_seed)
-        adj_factor = np.zeros((1,3))
+        np.random.seed(seed=random_seed) 
+        adj_factor = np.ones((1,3))
         for stI in range(len(scale_max)):
             adj_factor[0,stI] = np.random.uniform(scale_min[stI],scale_max[stI]) ** np.random.choice((-1,1))
         adj_factor = adj_factor.flatten().tolist()
