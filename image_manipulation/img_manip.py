@@ -365,10 +365,12 @@ def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25
     return outIm
     
 
-def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg"):
+def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg", perTileRand = None):
     artifactType = artifactType.lower()
     # to remove any linkage between the different types of random addition (e.g. marker vs fold)
     typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6}
+    # to randomize slide/tile based on type of artifact
+    typeTileRand = {'marker' : True, 'fold': True, 'sectioning': True, 'illumination': True, 'bubbles': True, 'stain' : False}
     
     inputIm = Image.open(inputImName)
 
@@ -376,7 +378,13 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
     oPath1, rDir1 = os.path.split(inputImDir)
     _, rDir2 = os.path.split(oPath1)
     fNameNoExt = os.path.splitext(fName)[0]
-    fID = os.path.join(rDir2,rDir1,fNameNoExt)
+    
+    if perTileRand is None:
+        perTileRand = typeTileRand[artifactType]
+    if perTileRand == True:
+        fID = os.path.join(rDir2,rDir1,fNameNoExt)
+    else:
+        fID = os.path.join(rDir2,rDir1)
 
     randMax = (2**32) -1  # max size of the random seed
     # there's potentially some concern about the difference in 32 bit vs 64 bit systems
