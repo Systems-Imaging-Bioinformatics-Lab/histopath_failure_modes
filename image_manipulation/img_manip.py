@@ -402,17 +402,17 @@ def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25
 
 def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
              minSpacing = 20, maxSpacing = 40, minTearStart = 0, maxTearEnd = None,tearStEndFactor = [.2,.8],
-             inLineMax = 10, perpMax = 30, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2, rgbVal = (245,245,245),
+             dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2,
              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
              t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
-             edgeAlpha = .75, edgeColorMult = .75,
+             edgeAlpha = .75, edgeColorMult = .75,rgbVal = (245,245,245),
              randEdge = True):
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0])
     if sampSpl == None:
         sampSpl = rand_spline(dim, nPts = nSplPts,random_seed = random_seed,endEdge=-2)
-
+    
     # determine where the tears are located
     tearSpacing = np.random.randint(minSpacing,maxSpacing,size=(sampSpl.shape[0],1))
     splLen = sampSpl.shape[0]-1
@@ -437,6 +437,11 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     tearCents = sampSpl[cdTS,:]
     splDer = sampSpl[:-1,:]- sampSpl[1:,:]
 
+    if inLineMax == None:
+        inLineMax = np.random.randint(dirMin,dirMax,size=(1,1))
+    if perpMax == None:
+        perpMax = np.random.randint(dirMin,dirMax,size=(1,1))
+    
     splDer = np.concatenate((splDer[[0],:],splDer))
     tearDer = splDer[cdTS,:]
     areaMax = inLineMax * perpMax
@@ -481,7 +486,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
             newPts = centPts + totVec
             tierMats[tIdx][tier] = newPts.copy()
         idxRng = range(tearCtIdxs[tIdx].astype(int),tearCtIdxs[tIdx+1].astype(int))
-        tearXY[idxRng,:] = np.vstack(tierMats[tIdx].values())
+        tearXY[idxRng,:] = np.vstack(list(tierMats[tIdx].values()))
     
     # rectify the points so we don't go out of bounds
     tearXY = np.maximum(tearXY,0)
