@@ -447,8 +447,6 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     areaMax = inLineMax * perpMax
     tearDensity = areaMax/ ((ptWidth**2)*np.pi)
 
-    inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
-    perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
     nTears = tearCents.shape[0]
 #     tearCts = np.concatenate((np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1)),
 #                              np.random.randint(np.ceil(tearDensity*minDensity[0]),
