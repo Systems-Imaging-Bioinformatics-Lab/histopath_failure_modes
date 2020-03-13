@@ -400,7 +400,7 @@ def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25
 
 def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
              minSpacing = 20, maxSpacing = 40, minTearStart = 0, maxTearEnd = None,tearStEndFactor = [.2,.8],
-             inLineMax = 30, perpMax = 10, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2, rgbVal = (245,245,245),
+             inLineMax = 10, perpMax = 30, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2, rgbVal = (245,245,245),
              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
              t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
              edgeAlpha = .75, edgeColorMult = .75,
@@ -428,18 +428,18 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     cdTS = np.cumsum(tearSpacing)
     cdTS = cdTS[(cdTS >= tearStEnd[0]) & (cdTS < tearStEnd[1])]
 
-    splMask = np.ones(invDim)
-    splMask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
-    splDist = morphology.distance_transform_edt(splMask)
+#     splMask = np.ones(invDim)
+#     splMask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
+#     splDist = morphology.distance_transform_edt(splMask)
 
     tearCents = sampSpl[cdTS,:]
     splDer = sampSpl[:-1,:]- sampSpl[1:,:]
-    # print(splDer[0,:],splDer)
+
     splDer = np.concatenate((splDer[[0],:],splDer))
     tearDer = splDer[cdTS,:]
     areaMax = inLineMax * perpMax
     tearDensity = areaMax/ ((ptWidth**2)*np.pi)
-#     print(areaMax,tearDensity)
+
     inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
     perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
     nTears = tearCents.shape[0]
@@ -464,6 +464,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     for tIdx in range(len(cdTS)):
         tierMats[tIdx] = {}
         for tier in range(tearCts.shape[1]): # work in tiers, each tier builds off of the last, gradually filling out the space
+            # each tier builds off the last with a uniform distribution
             nPts = tearCts[tIdx,tier]
             if tier == 0:
                 centPts = np.repeat(np.reshape(tearCents[tIdx,:],(1,2)),nPts,axis=0)
@@ -513,9 +514,10 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
 def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg", perTileRand = None):
     artifactType = artifactType.lower()
     # to remove any linkage between the different types of random addition (e.g. marker vs fold)
-    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6}
+    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6,'tear': 7}
     # to randomize slide/tile based on type of artifact
-    typeTileRand = {'marker' : True, 'fold': True, 'sectioning': True, 'illumination': True, 'bubbles': True, 'stain' : False}
+    typeTileRand = {'marker' : True, 'fold': True, 'sectioning': True, 'illumination': True, 'bubbles': True, 
+                    'stain' : False, 'tear': True}
     
     inputIm = Image.open(inputImName)
 
@@ -548,6 +550,8 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
         outputIm = add_bubbles(inputIm,random_seed = random_seed)
     elif artifactType == "stain":
         outputIm = add_stain(inputIm,random_seed = random_seed)
+    elif artifactType == "tear":
+        outputIm = add_tear(inputIm,random_seed = random_seed)
     outputSuffix = artifactType[0:4]
     if outputImName is None:
         outputImName = "%s_%s.%s" % (fNameNoExt, outputSuffix, ext)
