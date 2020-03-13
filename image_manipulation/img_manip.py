@@ -10,10 +10,34 @@ from cv2 import GaussianBlur, blur, getPerspectiveTransform, warpPerspective
 from deconvolution import Deconvolution
 import deconvolution.pixeloperations as po
 
-def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,endEdge = True):
+def rand_spline(dim, inPts = None, nPts = 5, random_seed = None, startEdge = True, endEdge = True):
+    # splXY = rand_spline(dim, inPts= None, nPts = 5, random_seed =None, startEdge = True, endEdge = True)
+    #     builds a randomized spline from a set of randomized handle points
+    #     
+    # ###
+    # Inputs: Required
+    #     dim: a 2 element vector   Width by Height
+    # Inputs: Optional
+    #     inPts: n x 2 numpy array  Used to prespecify the handle points of the spline
+    #                               note: this is not random
+    #     nPts: int                 The number of random handle points in the spline
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     startEdge: bool           Whether or not the start of the spline should be on the edge of the image
+    #                int(0,1,2,3)   If startEdge is an int, it specifies which edge the spline starts on
+    #                               0 = Left, 1 = Top, 2 = Right, 3 = Bottom
+    #     endEdge: bool             Whether or not the start of the spline should be on the edge of the image
+    #              int(0,1,2,3)     If endEdge is a nonnegative int, it specifies which edge the spline stops on
+    #                               0 = Left, 1 = Top, 2 = Right, 3 = Bottom
+    #              int(-4,-3,-2,-1) If endEdge is a negative int, it specifies which edge the spline stops on 
+    #                               relative to the start
+    #                               -4 = Same, -3 = End is 1 step clockwise (e.g. Bottom -> Left)
+    #                               -2 = Opposite side, -1 = End is 1 step counterclockwise (e.g. Bottom -> Right)
+    # ###
+    # Output:
+    #     splXY: m x 2 numpy array  Spline array sampled at a 1-pixel interval (distance between m points is ~1px)
+    
     np.random.seed(seed=random_seed)
 
-#     print(nPts)
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
     if inPts is None:
         inPts = np.concatenate((np.random.randint((dim[0]-1),size=(nPts,1)),
@@ -53,8 +77,17 @@ def rand_spline(dim,inPts= None, nPts = 5,random_seed =None,startEdge = True,end
     splXY = interpolate.pchip_interpolate(cdXY,inPts,iDist)
     return splXY
 
-def rand_gauss(dim,zeroToOne = False, maxCov = 50, nNorms = 25, random_seed = None,centXY = None,
+def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None, zeroToOne = False,
               minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
+    # sumMap = rand_gauss(dim, nNorms = 25, maxCov = 50, random_seed = None,centXY = None, zeroToOne = False,
+    #                  minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
+    # ###
+    # Inputs: Required
+    #     dim: a 2 element vector   Width by Height
+    # Inputs: Optional
+    #     nNorms: int
+    #     zeroToOne: bool           Whether or not the coordinates are scaled zeroToOne
+    
     np.random.seed(seed=random_seed)
     invDim = (dim[1],dim[0])
      
@@ -363,8 +396,120 @@ def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25
     rgbOut,rgb_1,rgb_2,rgb_3 = adjust_stain(inputIm,adj_factor)
     outIm = Image.fromarray(rgbOut,'RGB')
     return outIm
-    
 
+
+def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
+             minSpacing = 20, maxSpacing = 40, minTearStart = 0, maxTearEnd = None,tearStEndFactor = [.2,.8],
+             inLineMax = 30, perpMax = 10, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2, rgbVal = (245,245,245),
+             inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
+             t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
+             edgeAlpha = .75, edgeColorMult = .75,
+             randEdge = True):
+    np.random.seed(seed=random_seed)
+    dim = inputIm.size # width by height
+    invDim = (dim[1],dim[0])
+    if sampSpl == None:
+        sampSpl = rand_spline(dim, nPts = nSplPts,random_seed = random_seed,endEdge=-2)
+
+    # determine where the tears are located
+    tearSpacing = np.random.randint(minSpacing,maxSpacing,size=(sampSpl.shape[0],1))
+    splLen = sampSpl.shape[0]-1
+    if maxTearEnd == None:
+        maxTearEnd = splLen
+    # randomly trim the start and end
+    tearStEnd = np.zeros((2,1))
+    tearStEnd[0] = np.random.randint(0,np.floor(splLen*tearStEndFactor[0]),size=(1,1))
+    tearStEnd[1] = tearStEnd[0] + np.random.randint(np.floor(splLen*tearStEndFactor[1]),splLen,size=(1,1))
+    tearStEnd[0] = 0
+    tearStEnd[1] = splLen
+
+    tearStEnd[tearStEnd > maxTearEnd] = maxTearEnd
+    tearStEnd[tearStEnd < minTearStart] = minTearStart
+    cdTS = np.cumsum(tearSpacing)
+    cdTS = cdTS[(cdTS >= tearStEnd[0]) & (cdTS < tearStEnd[1])]
+
+    splMask = np.ones(invDim)
+    splMask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
+    splDist = morphology.distance_transform_edt(splMask)
+
+    tearCents = sampSpl[cdTS,:]
+    splDer = sampSpl[:-1,:]- sampSpl[1:,:]
+    # print(splDer[0,:],splDer)
+    splDer = np.concatenate((splDer[[0],:],splDer))
+    tearDer = splDer[cdTS,:]
+    areaMax = inLineMax * perpMax
+    tearDensity = areaMax/ ((ptWidth**2)*np.pi)
+#     print(areaMax,tearDensity)
+    inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
+    perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)])
+    nTears = tearCents.shape[0]
+#     tearCts = np.concatenate((np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1)),
+#                              np.random.randint(np.ceil(tearDensity*minDensity[0]),
+#                                                np.ceil(tearDensity*maxDensity[0]),size=(nTears,1)),
+#                              np.random.randint(np.ceil(tearDensity*minDensity[1]),
+#                                                np.ceil(tearDensity*maxDensity[1]),size=(nTears,1))),
+#                              axis=1)
+
+    tearCts = np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1))
+    for tNo in range(len(minDensity)): # build up the tier matrix
+        tearCts = np.append(tearCts, np.random.randint(np.ceil(tearDensity*minDensity[tNo]),
+                                                       np.ceil(tearDensity*maxDensity[tNo]),size=(nTears,1)),
+                            axis = 1)
+
+    tearCtIdxs = np.concatenate((np.zeros((1)),np.cumsum(np.sum(tearCts,axis=1))),axis=0)
+
+    tearXY = np.zeros((np.sum(tearCts),2))
+    tierMats = {}
+    # generate tears by using random points
+    for tIdx in range(len(cdTS)):
+        tierMats[tIdx] = {}
+        for tier in range(tearCts.shape[1]): # work in tiers, each tier builds off of the last, gradually filling out the space
+            nPts = tearCts[tIdx,tier]
+            if tier == 0:
+                centPts = np.repeat(np.reshape(tearCents[tIdx,:],(1,2)),nPts,axis=0)
+            else:
+                centIdxs = np.random.randint(0,tearCts[tIdx,tier-1],size=(nPts))
+                centPts = tierMats[tIdx][tier-1][centIdxs,:]
+            inLineFactor = np.random.uniform(inLinePercs[0,tier]*inLineMax,inLinePercs[1,tier]*inLineMax,size=(nPts,1))
+            perpFactor = np.random.uniform(perpPercs[0,tier]*perpMax,perpPercs[1,tier]*perpMax,size=(nPts,1))
+            cDerIL = tearDer[tIdx,:]
+            cDerP = np.array([tearDer[tIdx,1], -tearDer[tIdx,0]])
+            totVec = (inLineFactor * cDerIL) + (perpFactor * cDerP)
+            newPts = centPts + totVec
+            tierMats[tIdx][tier] = newPts.copy()
+        idxRng = range(tearCtIdxs[tIdx].astype(int),tearCtIdxs[tIdx+1].astype(int))
+        tearXY[idxRng,:] = np.vstack(tierMats[tIdx].values())
+    
+    # rectify the points so we don't go out of bounds
+    tearXY = np.maximum(tearXY,0)
+    tearXY[:,0] = np.minimum(tearXY[:,0],dim[0]-1)
+    tearXY[:,1] = np.minimum(tearXY[:,1],dim[1]-1)
+
+    # turn these points into a distance mask
+    tearMask = np.ones(invDim)
+    tearMask[(np.round(tearXY[:,1])).astype(int),np.round(tearXY[:,0]).astype(int)] = 0
+    tearDist = morphology.distance_transform_edt(tearMask)
+   
+    if randEdge == True:
+        distRand = np.random.uniform(-int(ptWidth*.5),int(ptWidth*.5),size=invDim)
+        tearDist = blur(tearDist+distRand,(5,5))
+    tearBW = tearDist <= ptWidth
+
+    alphaArr = (tearBW*tearAlpha*255).astype(np.uint8)
+    colorArr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
+    edgeArea = np.logical_and(tearDist > ptWidth,tearDist <= ptWidth+edgeWidth)
+    
+    meanColor = np.mean(np.array(inputIm),axis=(0,1))
+    for i in range(len(rgbVal)):
+        colorArr[:,:,i] = rgbVal[i]
+        colorArr[edgeArea,i] = np.uint8(np.minimum(meanColor[i] * edgeColorMult,255))
+
+    alphaArr[edgeArea] = edgeAlpha * 255
+    alphaMask = Image.fromarray(alphaArr,'L')
+    colorLayer = Image.fromarray(colorArr,'RGB')
+    comp_im = Image.composite(colorLayer, inputIm, alphaMask)
+    return comp_im
+    
 def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg", perTileRand = None):
     artifactType = artifactType.lower()
     # to remove any linkage between the different types of random addition (e.g. marker vs fold)
@@ -381,9 +526,9 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
     
     if perTileRand is None:
         perTileRand = typeTileRand[artifactType]
-    if perTileRand == True:
+    if perTileRand == True: # take into account the tile name
         fID = os.path.join(rDir2,rDir1,fNameNoExt)
-    else:
+    else: # only take into account the slide name
         fID = os.path.join(rDir2,rDir1)
 
     randMax = (2**32) -1  # max size of the random seed
