@@ -405,7 +405,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
              dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2,
              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
              t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
-             edgeAlpha = .75, edgeColorMult = .75,rgbVal = (245,245,245),
+             edgeAlpha = .75, edgeColorMult = [.85,.7,.85],rgbVal = (245,245,245),
              randEdge = True):
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
@@ -505,10 +505,18 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     colorArr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
     edgeArea = np.logical_and(tearDist > ptWidth,tearDist <= ptWidth+edgeWidth)
     
+#     blurIm = Image.fromarray(blur(np.array(inputIm),(75,75)),"HSV")
+#     imHSV = blurIm.convert("HSV")
+#     blurBackground = np.array(imHSV)
+#     blurBackground[:,:,1] = np.uint8(np.minimum(blurBackground[:,:,1] * 1.5,255))
+#     blurBackground[:,:,2] = np.uint8(np.minimum(blurBackground[:,:,2] * 1.2,255))
+#     blurHSV = Image.fromarray(blurBackground,"HSV")
+#     blurRGB = np.array(blurHSV.convert("RGB"))
+    
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
         colorArr[:,:,i] = rgbVal[i]
-        colorArr[edgeArea,i] = np.uint8(np.minimum(meanColor[i] * edgeColorMult,255))
+        colorArr[edgeArea,i] = np.uint8(np.minimum(meanColor[i] * edgeColorMult[i],255))
 
     alphaArr[edgeArea] = edgeAlpha * 255
     alphaMask = Image.fromarray(alphaArr,'L')
