@@ -18,7 +18,7 @@ def rand_spline(dim, inPts = None, nPts = 5, random_seed = None, startEdge = Tru
     # Inputs: Required
     #     dim: a 2 element vector   Width by Height
     # Inputs: Optional
-    #     inPts: n x 2 numpy array  Used to prespecify the handle points of the spline
+    #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
     #                               note: this is not random
     #     nPts: int                 The number of random handle points in the spline
     #     random_seed: int          The random seed for numpy for consistent generation
@@ -162,9 +162,28 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     #                     width = 50, alpha = .75, rgbVal= None,
     #                     rgbRange = np.array([[0,50],[0,50],[0,100]])):
     #           adds a marker line onto the image of a fixed width and color
+    #
+    # ###
     # Inputs: Required
-    #     inputIm: a PIL Image    A 2D RGB image
-    # 
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     nPts: int                 The number of random handle points in the spline
+    #     sampSpl: n x 2 numpy arr  You can optionally specify the sampled spline (non-random)
+    #                               - Note: should be sampled densely enough (i.e. at least every pixel)
+    #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
+    #                               - Note: this is not random
+    #     width: float              The width of the marker line, in pixels
+    #     alpha: float (0-1)        The alpha transparency of the marker layer (1 = opaque, 0 = transparent)
+    #     rgbVal: 3 uint8 vector    The RGB color of the marker can be optionally specified
+    #           >=0 <=255
+    #     rgbRange: 3 x 2 uint8 arr The RGB range of the randomized color [[minR,maxR],[minG,maxG],[minB,maxB]]
+    #           >=0 <=255           - Leans more blue heavy by default
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with the marker layer on top of the original image
+    
+    
     np.random.seed(seed=random_seed)
     if rgbVal is None:
         rgbVal = np.zeros((3,1))
@@ -188,6 +207,7 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     # use the distance map to build a fixed width region
     bw_reg = bw_dist <= width
     im_rgba = inputIm.convert("RGBA")
+    # build up the semi-transparent colored layer
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
     color_arr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
     for i in range(len(rgbVal)):
@@ -222,9 +242,8 @@ def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =Non
         shiftXY = samp_shiftXY
             
 
-    pad_szXY = (512,512,0) # pad x, pad y, no pad z (have to reshape for np.pad, which takes y,x,z)
+    pad_szXY = (max(dim),max(dim),0) # pad x, pad y, no pad z (have to reshape for np.pad, which takes y,x,z)
     sampBlur = (((fold_width//20)*2)+1,((fold_width//20)*2)+1) # has to be odd kernel
-#     scaleXY = [2/3, 1]
     
     pad_amt = np.transpose(np.tile(np.array(pad_szXY)[[1,0,2]],(2,1)))
     samp_pad_arr = np.pad(samp_arr,pad_amt,mode='symmetric')
