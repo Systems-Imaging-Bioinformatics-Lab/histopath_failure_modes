@@ -173,7 +173,7 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     #                               - Note: should be sampled densely enough (i.e. at least every pixel)
     #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
     #                               - Note: this is not random
-    #     width: float              The width of the marker line, in pixels
+    #     width: float              1/2 the width of the marker line, in pixels
     #     alpha: float (0-1)        The alpha transparency of the marker layer (1 = opaque, 0 = transparent)
     #     rgbVal: 3 uint8 vector    The RGB color of the marker can be optionally specified
     #           >=0 <=255
@@ -219,10 +219,51 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     return comp_im
 
 
-def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1],fold_width = 100,
-             samp_shiftXY = None,randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
+def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =None, scaleXY =[1,1], width = 100,
+             sampShiftXY = None, randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
+    # comp_im = add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1], width = 100,
+    #                    sampShiftXY = None,randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
+    #           adds a tissue fold to the input image along a spline path
+    #           based on sampling from the input image
+    #
+    # ###
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     sampArr: numpy arr        A numpy array the size of the input image
+    #     - used for recursion      - if the input image is not where the tissue should be sampled from
+    #     sampSpl: n x 2 numpy arr  You can optionally specify the sampled spline (non-random)
+    #     - used for recursion      
+    #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
+    #                               - Note: this is not random
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     scaleXY: 2 float vector   Used to scale the sampling bounding box, if the sample region should be resized
+    #                               Defaults to no change between original and sampling
+    #                               large scale = larger sample region
+    #     width: float              1/2 the width of the tissue fold region, in pixels
+    #     sampShiftXY: 2 int vec    You can optionally specify the direction to shift the spline region
+    #                               Defaults to a random direction at most half the size of the image
+    #     randEdge: bool            Whether to add some randomness to the edge of the tissue fold region
+    #                               Defaults to off
+    #     nLayers: int              Number of tissue layers to add to the image
+    #                               Runs the function recursively, defaults to 2 layers
+    #     nPts: int                 The number of random handle points in the spline
+    #     endEdge: bool             Whether or not the start of the spline should be on the edge of the image
+    #              int(0,1,2,3)     If endEdge is a nonnegative int, it specifies which edge the spline stops on
+    #                               0 = Left, 1 = Top, 2 = Right, 3 = Bottom
+    #              int(-4,-3,-2,-1) If endEdge is a negative int, it specifies which edge the spline stops on 
+    #                               relative to the start
+    #                               -4 = Same, -3 = End is 1 step clockwise (e.g. Bottom -> Left)
+    #                               -2 = Opposite side, -1 = End is 1 step counterclockwise (e.g. Bottom -> Right)
+    #                               Defaults to -2
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with the tissue fold layers on top of the original image
+    
     np.random.seed(seed=random_seed)
-
+    if nLayers < 1: # if someone handed in an invalid # of layers, return back the original image
+        return inputIm
+    
     im_arr = np.array(inputIm)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
@@ -233,33 +274,37 @@ def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =Non
         else:
             sampSpl = rand_spline(dim, inPts = inPts,random_seed = random_seed)
     
-    if samp_arr is None:
-        samp_arr = np.copy(im_arr)
+    if sampArr is None:
+        sampArr = np.copy(im_arr)
         
-    if samp_shiftXY is None: # randomly initialized if empty
+    if sampShiftXY is None: # randomly initialized if empty
         shiftXY = np.random.randint(-int(dim[0]/2),int(dim[0]/2),size=(2,1))
     else:
-        shiftXY = samp_shiftXY
+        shiftXY = sampShiftXY
             
 
     pad_szXY = (max(dim),max(dim),0) # pad x, pad y, no pad z (have to reshape for np.pad, which takes y,x,z)
-    sampBlur = (((fold_width//20)*2)+1,((fold_width//20)*2)+1) # has to be odd kernel
+    sampBlur = (((width//20)*2)+1,((width//20)*2)+1) # has to be odd kernel
     
+    # pad the array to allow for sampling, mirror tiles outside of range
     pad_amt = np.transpose(np.tile(np.array(pad_szXY)[[1,0,2]],(2,1)))
-    samp_pad_arr = np.pad(samp_arr,pad_amt,mode='symmetric')
+    sampPadArr = np.pad(sampArr,pad_amt,mode='symmetric')
 
     sampSplBBox = np.vstack((np.amin(sampSpl,axis=0),np.amax(sampSpl,axis=0)))
     sampSplBBSz = np.diff(sampSplBBox,axis=0)
     rsSplBBox = np.zeros((2,2))
 
+    # build up the bounding box of the region to be sampled from
     signTup = (-1,1)
     for di in range(2):
-        rsSplBBox[di,:] = np.mean(sampSplBBox,axis=0) + (((sampSplBBSz/2) / scaleXY) * signTup[di])
+        rsSplBBox[di,:] = np.mean(sampSplBBox,axis=0) + (((sampSplBBSz/2) * scaleXY) * signTup[di])
         
     rsSplBBSz = np.diff(rsSplBBox,axis=0)
 
+    # allow for a random shift to the sampling region, to each of the corners of the sample region
     sampSplBBPts = np.zeros((4,2),dtype=np.float32)
     outBBPts = np.zeros((4,2),dtype=np.float32)
+    # maximum change is ± 1/4 of the size of the sampling bounding box 
     randShiftX = np.random.randint(-int(rsSplBBSz[0,0]/4),int(rsSplBBSz[0,0]/4),size=(4,1))
     randShiftY = np.random.randint(-int(rsSplBBSz[0,1]/4),int(rsSplBBSz[0,1]/4),size=(4,1))
     
@@ -273,34 +318,34 @@ def add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =Non
 
     M = getPerspectiveTransform(outBBPts,sampSplBBPts)
 
-    warp_im = warpPerspective(samp_pad_arr,M,dim)
+    warp_im = warpPerspective(sampPadArr,M,dim)
 
     #
     mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
-    bw_dist = morphology.distance_transform_edt(mask)
+    bwDist = morphology.distance_transform_edt(mask)
     if randEdge == True:
-        distRand = np.random.randint(-int(fold_width/2),int(fold_width/2),size=invDim)
-        bw_dist = blur(bw_dist+distRand,(5,5))
+        distRand = np.random.randint(-int(width/2),int(width/2),size=invDim)
+        bwDist = blur(bwDist+distRand,(5,5))
     
     im_L =  inputIm.convert("L")
     im_L_arr = np.array(im_L)
-    bw_reg = bw_dist <= fold_width
+    bwReg = bwDist <= width
     
 
     # multiplicative combination.  Makes things darker
     unit_dst_arr = np.ones(warp_im.shape)
     for i in range(warp_im.shape[2]):
-        unit_dst_arr[:,:,i] = np.where(bw_reg,warp_im[:,:,i]/255,1)
+        unit_dst_arr[:,:,i] = np.where(bwReg,warp_im[:,:,i]/255,1)
     unit_dst_arr = GaussianBlur(unit_dst_arr,sampBlur,0)
-    comb_arr = unit_dst_arr * im_arr
-    comb_img = Image.fromarray(comb_arr.astype(np.uint8),'RGB')
+    comp_arr = unit_dst_arr * im_arr
+    comp_im = Image.fromarray(comp_arr.astype(np.uint8),'RGB')
     
     if nLayers > 1: # recursive addition
-        comb_img = add_fold(comb_img,samp_arr=samp_arr, sampSpl=sampSpl,inPts=inPts,random_seed = random_seed+1,
-                 scaleXY=scaleXY,fold_width=fold_width,samp_shiftXY=samp_shiftXY,randEdge=randEdge,
+        comp_im = add_fold(comp_im,sampArr=sampArr, sampSpl=sampSpl,inPts=inPts,random_seed = random_seed+1,
+                 scaleXY=scaleXY,width=width,sampShiftXY=sampShiftXY,randEdge=randEdge,
                  nLayers=nLayers-1)
-    return comb_img
+    return comp_im
 
 def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
                   sampSpl = None, inPts = None):
