@@ -173,7 +173,7 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     #                               - Note: should be sampled densely enough (i.e. at least every pixel)
     #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
     #                               - Note: this is not random
-    #     width: float              The width of the marker line, in pixels
+    #     width: float (+)          The width of the marker line, in pixels
     #     alpha: float (0-1)        The alpha transparency of the marker layer (1 = opaque, 0 = transparent)
     #     rgbVal: 3 uint8 vector    The RGB color of the marker can be optionally specified
     #           >=0 <=255
@@ -240,14 +240,14 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
     #     scaleXY: 2 float vector   Used to scale the sampling bounding box, if the sample region should be resized
     #                               Defaults to no change between original and sampling
     #                               large scale = larger sample region
-    #     width: float              The width of the tissue fold region, in pixels
+    #     width: float (+)          The width of the tissue fold region, in pixels
     #     sampShiftXY: 2 int vec    You can optionally specify the direction to shift the spline region
     #                               Defaults to a random direction at most half the size of the image
     #     randEdge: bool            Whether to add some randomness to the edge of the tissue fold region
     #                               Defaults to off
-    #     nLayers: int              Number of tissue layers to add to the image
+    #     nLayers: int (+)          Number of tissue layers to add to the image
     #                               Runs the function recursively, defaults to 2 layers
-    #     nPts: int                 The number of random handle points in the spline
+    #     nPts: int (+)             The number of random handle points in the spline
     #     endEdge: bool             Whether or not the start of the spline should be on the edge of the image
     #              int(0,1,2,3)     If endEdge is a nonnegative int, it specifies which edge the spline stops on
     #                               0 = Left, 1 = Top, 2 = Right, 3 = Bottom
@@ -430,16 +430,16 @@ def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = 
     # comp_im = add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
     #                      edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
     #           adds bubbles in the mold of nuclear bubbling randomly throughout the image
-    
+    # 
     # ###
     # Inputs: Required
     #     inputIm: a PIL Image      A 2D RGB image
     # Inputs: Optional
     #     random_seed: int          The random seed for numpy for consistent generation
     #     nBubbles: int (+)         The number of bubbles to generate in the image
-    #     maxWidth: float           The maximum width of the randomized bubbles (roughly), in pixels
+    #     maxWidth: float (+)       The maximum width of the randomized bubbles (roughly), in pixels
     #     alpha: float (0-1)        The alpha transparency of the bubble layer (1 = opaque, 0 = transparent)
-    #     edgeWidth: float          The width of the darker edge of the bubble, in pixels
+    #     edgeWidth: float (+)      The width of the darker edge of the bubble, in pixels
     #     edgeColorMult:            The RGB multiplier of the edge of the bubble 
     #        3 float vector         -Relative to the mean RGB color of the image
     #     rgbVal: 3 float vector    The RGB color of the bubbles
@@ -474,6 +474,29 @@ def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = 
 
 def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMin = .8,scaleMax = 1.1,
                     minCovScale = .5,minDiagCovScale = .1, maxCrCovScale = .2):
+    # comp_im = add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMin = .8,scaleMax = 1.1,
+    #                           minCovScale = .5,minDiagCovScale = .1, maxCrCovScale = .2):
+    #           add uneven illumination artifact to the input image
+    # 
+    # ###
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     maxCov: float (+)         The maximum covariance (governs the size of the distributions)
+    #     nNorms: int (+)           The number of Gaussian distributions used to build the uneven illumination
+    #     scaleMin: float (<1)      The minimum for the random factor used to adjust the illumination
+    #     scaleMax: float (>1)      The maximum for the random factor used to adjust the illumination
+    #     minCovScale: float        The minimum on the range of sizes across the set of distributions
+    #         Recommend >0 & ≤1
+    #     minDiagCovScale: float    Affects the diagonal of the covariance matrix, and the minimum relative size 
+    #         Recommend >0 & ≤1     of the two components compared to the scaled max covariance
+    #     maxCrCovScale: float      The maximum relative cross covariance (1 = straight line, 0 = uncorrelated)
+    #          Recommend >0 & ≤1    Affects the shape of the distributions, a higher number means more eccentricity
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with the uneven illumination added to the original image
+    
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0])
@@ -501,10 +524,30 @@ def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMi
     imHSV_arr = np.array(imHSV)
     imHSV_arr[:,:,2] = np.minimum(255,np.multiply(imHSV_arr[:,:,2],nSumMap))
     imLumHSV = Image.fromarray(imHSV_arr,"HSV")
-    imLum = imLumHSV.convert("RGB")
-    return imLum
+    comp_im = imLumHSV.convert("RGB")
+    return comp_im
 
-def adjust_stain(inputIm,adj_factor = [1,1,1]):
+def adjust_stain(inputIm,adjFactor = [1,1,1]):
+    # (rgbOut,rgb1,rgb2,rgb3) = adjust_stain(inputIm,adjFactor = [1,1,1])
+    #           adjust the stain levels of the H&E image
+    #           based on the Deconvolution package: 
+    #           https://deconvolution.readthedocs.io/en/latest/readme.html#two-stain-deconvolution 
+    #
+    # ###
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     adjFactor: 3 float vec    The adjustment factor for each of the three basis vectors 
+    #                               (<1 = less stain, 1 = same, >1 = more stain)
+    #                               Element 1: Eosin
+    #                               Element 2: Hematoxylin
+    #                               Element 3: Null (the remaining structure)
+    # ###
+    # Output:
+    #     rgbOut: m x n x 3 array   A 2D RGB image (H&E) with the stain levels adjusted
+    #     rgb1: m x n x 3 numpy arr A 2D RGB image of the Eosin layer only
+    #     rgb2: m x n x 3 numpy arr A 2D RGB image of the Hematoxylin layer only
+    #     rgb3: m x n x 3 numpy arr A 2D RGB image of the null layer only
     
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
@@ -516,8 +559,7 @@ def adjust_stain(inputIm,adj_factor = [1,1,1]):
 #     dec = Deconvolution(image=inputIm, basis=[[0.91, 0.38, 0.71], [0.39, 0.47, 0.85],[0.0, 0.0, 0.0]])
     dec = Deconvolution(image=inputIm, basis=[stain_dict['eosin'], stain_dict['hematoxylin'],stain_dict['null']])
 
-
-    # this section is extracted from the deconvolution package, but adjusted to allow for altering the stain levels
+    ## this section is extracted from the deconvolution package, but adjusted to allow for altering the stain levels
     pxO= dec.pixel_operations
     _white255 = np.array([255, 255, 255], dtype=float)
     
@@ -527,29 +569,51 @@ def adjust_stain(inputIm,adj_factor = [1,1,1]):
     
     # Produce density matrices for both colors + null. Be aware, as Beer's law do not always hold.
     a, b, c = map(po._array_positive, dec.out_scalars())
-    af = np.repeat(a, 3).reshape(iDimRGB) * adj_factor[0] # Adjusting the exponential coefficient
-    bf = np.repeat(b, 3).reshape(iDimRGB) * adj_factor[1] # For the different stain components
-    cf = np.repeat(c, 3).reshape(iDimRGB) * adj_factor[2]
+    af = np.repeat(a, 3).reshape(iDimRGB) * adjFactor[0] # Adjusting the exponential coefficient
+    bf = np.repeat(b, 3).reshape(iDimRGB) * adjFactor[1] # For the different stain components
+    cf = np.repeat(c, 3).reshape(iDimRGB) * adjFactor[2]
 
-    # exponential map, for changing 
+    # exponential map, for changing stain levels into RGB
     rgbOut = po._array_to_colour_255(_white255 * (vf ** af) * (uf ** bf) * (wf ** cf))
-    rgb_1 = po._array_to_colour_255(_white255 * (vf ** af))
-    rgb_2 = po._array_to_colour_255(_white255 * (uf ** bf))
-    rgb_3 = po._array_to_colour_255(_white255 * (wf ** cf))
+    rgb1 = po._array_to_colour_255(_white255 * (vf ** af))
+    rgb2 = po._array_to_colour_255(_white255 * (uf ** bf))
+    rgb3 = po._array_to_colour_255(_white255 * (wf ** cf))
     
-    return rgbOut,rgb_1,rgb_2,rgb_3
+    return rgbOut,rgb1,rgb2,rgb3
 
-def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25,1.25,1],random_seed = None):
+def add_stain(inputIm,adj_factor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1.25,1],random_seed = None):
+    # comp_im = add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25,1.25,1],random_seed = None):
+    #           randomly adjust the stain levels of the H&E image
+    #           based on the Deconvolution package: 
+    #           https://deconvolution.readthedocs.io/en/latest/readme.html#two-stain-deconvolution 
+    #
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     adjFactor: 3 float vec    The adjustment factor for each of the three basis vectors 
+    #                               (<1 = less stain, 1 = same, >1 = more stain)
+    #                               Element 1: Eosin
+    #                               Element 2: Hematoxylin
+    #                               Element 3: Null (the remaining structure)
+    #                               If set the change won't be random
+    #     scaleMax: 3 float vector  The maximum amount of change (increase or decrease) to the stain levels
+    #              (>=1)
+    #     scaleMin: 3 float vector  The minimum amount of change (increase or decrease) to the stain levels
+    #              (>=1)
+    #     random_seed: int          The random seed for numpy for consistent generation
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image (H&E) with the stain levels adjusted
+    
     if adj_factor is None:
         np.random.seed(seed=random_seed) 
-        adj_factor = np.ones((1,3))
-        for stI in range(len(scale_max)):
-            adj_factor[0,stI] = np.random.uniform(scale_min[stI],scale_max[stI]) ** np.random.choice((-1,1))
-        adj_factor = adj_factor.flatten().tolist()
-#         print(adj_factor)
-    rgbOut,rgb_1,rgb_2,rgb_3 = adjust_stain(inputIm,adj_factor)
-    outIm = Image.fromarray(rgbOut,'RGB')
-    return outIm
+        adjFactor = np.ones((1,3))
+        for stI in range(len(scaleMax)):
+            adjFactor[0,stI] = np.random.uniform(scaleMin[stI],scaleMax[stI]) ** np.random.choice((-1,1))
+        adjFactor = adjFactor.flatten().tolist()
+    rgbOut,rgb1,rgb2,rgb3 = adjust_stain(inputIm,adjFactor = adjFactor)
+    comp_im = Image.fromarray(rgbOut,'RGB')
+    return comp_im
 
 
 def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
