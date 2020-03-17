@@ -65,8 +65,8 @@ def rand_spline(dim, inPts = None, nPts = 5, random_seed = None, startEdge = Tru
                 edgeNum = np.random.randint(4)
             LR_v_TB = edgeNum % 2 # left/right vs top/bottom
             LT_V_RB = edgeNum // 2 # left/top vs right/bottom    
+            
             inPts[nPts-1,LR_v_TB] = LT_V_RB * (dim[LR_v_TB]-1) # one edge or the other
-        # print(inPts)
         
     else:
         if isinstance(inPts,list):
@@ -83,12 +83,33 @@ def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None,
               minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
     # sumMap = rand_gauss(dim, nNorms = 25, maxCov = 50, random_seed = None,centXY = None, zeroToOne = False,
     #                  minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
+    #          Builds a set of randomized Gaussians within a set range of properties, and adds them together
+    #
     # ###
     # Inputs: Required
     #     dim: a 2 element vector   Width by Height
     # Inputs: Optional
-    #     nNorms: int
-    #     zeroToOne: bool           Whether or not the coordinates are scaled zeroToOne
+    #     nNorms: int               The number of Gaussian distributions to generate
+    #     maxCov: float (+)         The maximum covariance of each Gaussian
+    #                               - Related to the size of each Gaussian distribution in pixels
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     centXY: n x 2 float arr   The locations of the Gaussians can be specified manually if desired, instead of randomly
+    #     zeroToOne: bool           Whether or not the coordinates are scaled zeroToOne (requires retuning the other sizes)
+    #     minMaxX: 2 float vector   The range of where the gaussians are generated in the image in the X dimension
+    #                               - Defaults to the range of the image, could be off screen if desired
+    #     minMaxY: 2 float vector   The range of where the gaussians are generated in the image in the Y dimension
+    #                               - Defaults to the range of the image, could be off screen if desired
+    #     minCovScale: float        The minimum on the range of sizes across the set of distributions
+    #         Recommend >0 & ≤1
+    #     minDiagCovScale: float    Affects the diagonal of the covariance matrix, and the minimum relative size 
+    #         Recommend >0 & ≤1     of the two components compared to the scaled max covariance
+    #     maxCrCovScale: float      The maximum relative cross covariance (1 = straight line, 0 = uncorrelated)
+    #          Recommend >0 & ≤1    Affects the shape of the distributions, a higher number means more eccentricity
+    # ###
+    # Output:
+    #     sumMap: numpy array (dim) Creates a numpy array of the input size, where all the scaled Gaussian 
+    #                               distributions have been added together
+    
     
     np.random.seed(seed=random_seed)
     invDim = (dim[1],dim[0])
@@ -115,6 +136,8 @@ def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None,
     if centXY is None:
         centXY = np.concatenate((np.random.uniform(minMaxX[0],minMaxX[1],size=(nNorms,1)),
                         np.random.uniform(minMaxY[0],minMaxY[1],size=(nNorms,1))), axis=1)
+    else:
+        nNorms = centXY.shape[0]
     
     sumMap = np.zeros(invDim)
     for i in range(nNorms):
@@ -135,6 +158,13 @@ def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None,
 def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
               width = 50, alpha = .75, rgbVal= None,
               rgbRange = np.array([[0,50],[0,50],[0,100]])):
+    # comp_im = add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
+    #                     width = 50, alpha = .75, rgbVal= None,
+    #                     rgbRange = np.array([[0,50],[0,50],[0,100]])):
+    #           adds a marker line onto the image of a fixed width and color
+    # Inputs: Required
+    #     inputIm: a PIL Image    A 2D RGB image
+    # 
     np.random.seed(seed=random_seed)
     if rgbVal is None:
         rgbVal = np.zeros((3,1))
@@ -144,19 +174,18 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
 
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
-#     print(sampSpl is None, inPts is None)
     if sampSpl is None:
         if inPts is None:
             sampSpl = rand_spline(dim, nPts = nPts,random_seed = random_seed)
         else:
             sampSpl = rand_spline(dim, inPts = inPts,random_seed = random_seed)
-    
-#     print(nPts)
-    
+        
     mask = np.ones(invDim)
     mask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
+    # create a distance map to the points on the spline
     bw_dist = morphology.distance_transform_edt(mask)
 
+    # use the distance map to build a fixed width region
     bw_reg = bw_dist <= width
     im_rgba = inputIm.convert("RGBA")
     alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
@@ -295,7 +324,7 @@ def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5,
     return imSat
 
 def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
-               edgeColorMult = .75, rgbVal = (225,225,225)):
+               edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
@@ -314,7 +343,7 @@ def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = 
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
         color_arr[:,:,i] = rgbVal[i]
-        color_arr[edge_area,i] = np.uint8(meanColor[i] * edgeColorMult)
+        color_arr[edge_area,i] = np.uint8(meanColor[i] * edgeColorMult[i])
 
     color_layer = Image.fromarray(color_arr,'RGB')
     comp_im = Image.composite(color_layer, inputIm, alpha_mask)
@@ -410,13 +439,13 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0])
-    if sampSpl == None:
+    if sampSpl is None:
         sampSpl = rand_spline(dim, nPts = nSplPts,random_seed = random_seed,endEdge=-2)
     
     # determine where the tears are located
     tearSpacing = np.random.randint(minSpacing,maxSpacing,size=(sampSpl.shape[0],1))
     splLen = sampSpl.shape[0]-1
-    if maxTearEnd == None:
+    if maxTearEnd is None:
         maxTearEnd = splLen
     # randomly trim the start and end
     tearStEnd = np.zeros((2,1))
@@ -430,16 +459,12 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     cdTS = np.cumsum(tearSpacing)
     cdTS = cdTS[(cdTS >= tearStEnd[0]) & (cdTS < tearStEnd[1])]
 
-#     splMask = np.ones(invDim)
-#     splMask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
-#     splDist = morphology.distance_transform_edt(splMask)
-
     tearCents = sampSpl[cdTS,:]
     splDer = sampSpl[:-1,:]- sampSpl[1:,:]
 
-    if inLineMax == None:
+    if inLineMax is None:
         inLineMax = np.random.randint(dirMin,dirMax,size=(1,1))
-    if perpMax == None:
+    if perpMax is None:
         perpMax = np.random.randint(dirMin,dirMax,size=(1,1))
     
     splDer = np.concatenate((splDer[[0],:],splDer))
@@ -448,13 +473,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     tearDensity = areaMax/ ((ptWidth**2)*np.pi)
 
     nTears = tearCents.shape[0]
-#     tearCts = np.concatenate((np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1)),
-#                              np.random.randint(np.ceil(tearDensity*minDensity[0]),
-#                                                np.ceil(tearDensity*maxDensity[0]),size=(nTears,1)),
-#                              np.random.randint(np.ceil(tearDensity*minDensity[1]),
-#                                                np.ceil(tearDensity*maxDensity[1]),size=(nTears,1))),
-#                              axis=1)
-
+    
     tearCts = np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1))
     for tNo in range(len(minDensity)): # build up the tier matrix
         tearCts = np.append(tearCts, np.random.randint(np.ceil(tearDensity*minDensity[tNo]),
@@ -513,6 +532,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
 #     blurHSV = Image.fromarray(blurBackground,"HSV")
 #     blurRGB = np.array(blurHSV.convert("RGB"))
     
+    # determine the color of the edge area and the 
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
         colorArr[:,:,i] = rgbVal[i]
