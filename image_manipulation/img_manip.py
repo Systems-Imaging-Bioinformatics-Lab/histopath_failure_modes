@@ -156,10 +156,10 @@ def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None,
     return sumMap
 
 def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
-              width = 50, alpha = .75, rgbVal= None,
+              width = 100, alpha = .75, rgbVal= None,
               rgbRange = np.array([[0,50],[0,50],[0,100]])):
     # comp_im = add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
-    #                     width = 50, alpha = .75, rgbVal= None,
+    #                     width = 100, alpha = .75, rgbVal= None,
     #                     rgbRange = np.array([[0,50],[0,50],[0,100]])):
     #           adds a marker line onto the image of a fixed width and color
     #
@@ -173,7 +173,7 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     #                               - Note: should be sampled densely enough (i.e. at least every pixel)
     #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
     #                               - Note: this is not random
-    #     width: float              1/2 the width of the marker line, in pixels
+    #     width: float              The width of the marker line, in pixels
     #     alpha: float (0-1)        The alpha transparency of the marker layer (1 = opaque, 0 = transparent)
     #     rgbVal: 3 uint8 vector    The RGB color of the marker can be optionally specified
     #           >=0 <=255
@@ -202,13 +202,13 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     mask = np.ones(invDim)
     mask[(np.round(sampSpl[:,1])).astype(int),np.round(sampSpl[:,0]).astype(int)] = 0
     # create a distance map to the points on the spline
-    bw_dist = morphology.distance_transform_edt(mask)
+    bwDist = morphology.distance_transform_edt(mask)
 
     # use the distance map to build a fixed width region
-    bw_reg = bw_dist <= width
+    bwReg = bwDist <= width/2
     im_rgba = inputIm.convert("RGBA")
     # build up the semi-transparent colored layer
-    alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
+    alpha_mask = Image.fromarray((bwReg*alpha*255).astype(np.uint8),'L')
     color_arr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
     for i in range(len(rgbVal)):
         color_arr[:,:,i] = rgbVal[i]
@@ -219,9 +219,9 @@ def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None
     return comp_im
 
 
-def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =None, scaleXY =[1,1], width = 100,
+def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =None, scaleXY =[1,1], width = 200,
              sampShiftXY = None, randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
-    # comp_im = add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1], width = 100,
+    # comp_im = add_fold(inputIm,samp_arr =None, sampSpl=None, inPts = None,random_seed =None,scaleXY =[1,1], width = 200,
     #                    sampShiftXY = None,randEdge=False, nLayers = 2, nPts = 3,endEdge = -2):
     #           adds a tissue fold to the input image along a spline path
     #           based on sampling from the input image
@@ -240,7 +240,7 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
     #     scaleXY: 2 float vector   Used to scale the sampling bounding box, if the sample region should be resized
     #                               Defaults to no change between original and sampling
     #                               large scale = larger sample region
-    #     width: float              1/2 the width of the tissue fold region, in pixels
+    #     width: float              The width of the tissue fold region, in pixels
     #     sampShiftXY: 2 int vec    You can optionally specify the direction to shift the spline region
     #                               Defaults to a random direction at most half the size of the image
     #     randEdge: bool            Whether to add some randomness to the edge of the tissue fold region
@@ -284,7 +284,7 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
             
 
     pad_szXY = (max(dim),max(dim),0) # pad x, pad y, no pad z (have to reshape for np.pad, which takes y,x,z)
-    sampBlur = (((width//20)*2)+1,((width//20)*2)+1) # has to be odd kernel
+    sampBlur = (((width//40)*2)+1,((width//40)*2)+1) # has to be odd kernel
     
     # pad the array to allow for sampling, mirror tiles outside of range
     pad_amt = np.transpose(np.tile(np.array(pad_szXY)[[1,0,2]],(2,1)))
@@ -316,21 +316,22 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
         outBBPts[di,0] = rsSplBBox[LR_v_TB,0] + pad_szXY[0] + shiftXY[0] + randShiftX[di]
         outBBPts[di,1] = rsSplBBox[LT_V_RB,1] + pad_szXY[1] + shiftXY[1] + randShiftY[di]
 
+    # generate mapping matrix from original bounding box to the sampled bounding box
     M = getPerspectiveTransform(outBBPts,sampSplBBPts)
-
+    # warp the padded array based on this transform
     warp_im = warpPerspective(sampPadArr,M,dim)
 
-    #
+    # find the distance to the spline
     mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
     bwDist = morphology.distance_transform_edt(mask)
     if randEdge == True:
-        distRand = np.random.randint(-int(width/2),int(width/2),size=invDim)
+        distRand = np.random.randint(-int(width/4),int(width/4),size=invDim)
         bwDist = blur(bwDist+distRand,(5,5))
     
     im_L =  inputIm.convert("L")
     im_L_arr = np.array(im_L)
-    bwReg = bwDist <= width
+    bwReg = bwDist <= width/2
     
 
     # multiplicative combination.  Makes things darker
@@ -347,9 +348,44 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
                  nLayers=nLayers-1)
     return comp_im
 
-def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
-                  sampSpl = None, inPts = None):
-    # Uneven sectioning due to different thicknesses of slide
+def add_sectioning(inputIm, width = 240, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
+                  sampSpl = None, inPts = None, nPts = 2, endEdge = -2):
+    # comp_im = add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
+    #                         sampSpl = None, inPts = None, nPts = 2, endEdge = -2):
+    #         Add a region of uneven (thinner) sectioning due to different thicknesses of slide
+    #         Saturation of the region is decreased by a randomized factor within a range
+    #         Value of the region is increased by half of the percentage change of the saturation
+    #
+    # ###
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     width: float              The width of the sectioning region, in pixels
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     scaleMin: float           The minimum level of saturation allowed at random
+    #                               -Note: this scales based off of the distance from the spline
+    #     scaleMax: float           The maximum level of saturtation allowed at random
+    #                               -Note: this scales based off of the distance from the spline
+    #     randEdge: bool            Whether to add some randomness to the edge of the sectioning region
+    #                               Defaults to on
+    #     sampSpl: n x 2 numpy arr  You can optionally specify the sampled spline (non-random)
+    #     - used for recursion      
+    #     inPts: n x 2 numpy arr    Used to prespecify the handle points of the spline
+    #                               - Note: this is not random
+    #     nPts: int                 The number of random handle points in the spline
+    #                               Defaults to 2
+    #     endEdge: bool             Whether or not the start of the spline should be on the edge of the image
+    #              int(0,1,2,3)     If endEdge is a nonnegative int, it specifies which edge the spline stops on
+    #                               0 = Left, 1 = Top, 2 = Right, 3 = Bottom
+    #              int(-4,-3,-2,-1) If endEdge is a negative int, it specifies which edge the spline stops on 
+    #                               relative to the start
+    #                               -4 = Same, -3 = End is 1 step clockwise (e.g. Bottom -> Left)
+    #                               -2 = Opposite side, -1 = End is 1 step counterclockwise (e.g. Bottom -> Right)
+    #                               Defaults to -2
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with the sectioning artifact applied to the original image
+    
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
@@ -358,17 +394,18 @@ def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5,
         if inPts is None:
             sampSpl = rand_spline(dim, inPts = inPts,random_seed = random_seed)
         else:
-            sampSpl = rand_spline(dim, nPts = 2, endEdge = -2,random_seed = random_seed)
+            sampSpl = rand_spline(dim, nPts = nPts, endEdge = endEdge, random_seed = random_seed)
 
     mask = np.ones(invDim)
     mask[(sampSpl[:,1].astype(int)),sampSpl[:,0].astype(int)] = 0
     bw_dist = morphology.distance_transform_edt(mask)
     if randEdge == True:
-        distRand = np.random.randint(-int(sliceWidth),int(sliceWidth),size=invDim)
+        distRand = np.random.randint(-int(width/2),int(width/2),size=invDim)
         bw_dist = blur(bw_dist+distRand,(5,5))
 
-    bw_reg = bw_dist <= sliceWidth
-    nDistRng = bw_dist / sliceWidth
+    # scale the distance map from the randomized min to max, sectioning effect is stronger in the center
+    bw_reg = bw_dist <= width/2
+    nDistRng = bw_dist / (width/2)
     halfScale = (scaleMin + scaleMax)/2
     scaleRandMin = np.random.uniform(scaleMin,(halfScale+scaleMin)/2,size=(1,1))
     scaleRandMax = np.random.uniform((halfScale+scaleMax)/2,scaleMax,size=(1,1))
@@ -380,37 +417,59 @@ def add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5,
 
     imHSV = inputIm.convert("HSV")
     imHSV_arr = np.array(imHSV)
+    # increase the lightness by half the factor of decreased saturation
     imHSV_arr[:,:,1] = np.minimum(255,np.multiply(imHSV_arr[:,:,1],nDistRng))
     imHSV_arr[:,:,2] = np.minimum(255,np.divide(imHSV_arr[:,:,2],(nDistRng+1)/2))
-    # increase the lightness by half the factor of decreased saturation
+    # minimum function is to stop integer overflow
     imSatHSV = Image.fromarray(imHSV_arr,"HSV")
-    imSat = imSatHSV.convert("RGB")
-    return imSat
+    comp_im = imSatHSV.convert("RGB")
+    return comp_im
 
 def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
                edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
+    # comp_im = add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
+    #                      edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
+    #           adds bubbles in the mold of nuclear bubbling randomly throughout the image
+    
+    # ###
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     nBubbles: int (+)         The number of bubbles to generate in the image
+    #     maxWidth: float           The maximum width of the randomized bubbles (roughly), in pixels
+    #     alpha: float (0-1)        The alpha transparency of the bubble layer (1 = opaque, 0 = transparent)
+    #     edgeWidth: float          The width of the darker edge of the bubble, in pixels
+    #     edgeColorMult:            The RGB multiplier of the edge of the bubble 
+    #        3 float vector         -Relative to the mean RGB color of the image
+    #     rgbVal: 3 float vector    The RGB color of the bubbles
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with the bubbles added to the original image
+    
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0]) # have to invert the size dim because rows cols is yx vs xy
-#     maxCov = maxWidth
     
+    # use the randomized gaussian function
     sumMap = rand_gauss(dim,random_seed = random_seed, nNorms=nBubbles, maxCov = maxWidth, zeroToOne = False,
                        minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7)
-    bw_reg = sumMap >= 1
-    # mask = 1-bw_reg # invert the mask
-    bw_dist = morphology.distance_transform_edt(bw_reg)
-    edge_area = np.logical_and(bw_dist <= edgeWidth,bw_reg)
+    
+    bwReg = sumMap >= 1
+    bwDist = morphology.distance_transform_edt(bwReg)
+    edgeArea = np.logical_and(bwDist <= edgeWidth,bwReg)
 
-    alpha_mask = Image.fromarray((bw_reg*alpha*255).astype(np.uint8),'L')
-    color_arr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
+    alphaMask = Image.fromarray((bwReg*alpha*255).astype(np.uint8),'L')
+    colorArr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
 
+    # set the colors for the bubbles & edges
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
     for i in range(len(rgbVal)):
-        color_arr[:,:,i] = rgbVal[i]
-        color_arr[edge_area,i] = np.uint8(meanColor[i] * edgeColorMult[i])
+        colorArr[:,:,i] = rgbVal[i]
+        colorArr[edgeArea,i] = np.uint8(meanColor[i] * edgeColorMult[i])
 
-    color_layer = Image.fromarray(color_arr,'RGB')
-    comp_im = Image.composite(color_layer, inputIm, alpha_mask)
+    color_layer = Image.fromarray(colorArr,'RGB')
+    comp_im = Image.composite(color_layer, inputIm, alphaMask)
     return comp_im
 
 def add_illumination(inputIm,random_seed = None, maxCov = 15, nNorms = 3,scaleMin = .8,scaleMax = 1.1,
@@ -495,7 +554,7 @@ def add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25
 
 def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
              minSpacing = 20, maxSpacing = 40, minTearStart = 0, maxTearEnd = None,tearStEndFactor = [.2,.8],
-             dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptWidth = 2.25, tearAlpha = 1,edgeWidth = 2,
+             dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptRadius = 2.25, tearAlpha = 1,edgeWidth = 2,
              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
              t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
              edgeAlpha = .75, edgeColorMult = [.85,.7,.85],rgbVal = (245,245,245),
@@ -534,7 +593,7 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     splDer = np.concatenate((splDer[[0],:],splDer))
     tearDer = splDer[cdTS,:]
     areaMax = inLineMax * perpMax
-    tearDensity = areaMax/ ((ptWidth**2)*np.pi)
+    tearDensity = areaMax/ ((ptRadius**2)*np.pi)
 
     nTears = tearCents.shape[0]
     
@@ -580,13 +639,13 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     tearDist = morphology.distance_transform_edt(tearMask)
    
     if randEdge == True:
-        distRand = np.random.uniform(-int(ptWidth*.5),int(ptWidth*.5),size=invDim)
+        distRand = np.random.uniform(-int(ptRadius*.5),int(ptRadius*.5),size=invDim)
         tearDist = blur(tearDist+distRand,(5,5))
-    tearBW = tearDist <= ptWidth
+    tearBW = tearDist <= ptRadius
 
     alphaArr = (tearBW*tearAlpha*255).astype(np.uint8)
     colorArr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
-    edgeArea = np.logical_and(tearDist > ptWidth,tearDist <= ptWidth+edgeWidth)
+    edgeArea = np.logical_and(tearDist > ptRadius,tearDist <= ptRadius+edgeWidth)
     
 #     blurIm = Image.fromarray(blur(np.array(inputIm),(75,75)),"HSV")
 #     imHSV = blurIm.convert("HSV")
