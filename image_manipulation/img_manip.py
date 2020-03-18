@@ -543,7 +543,7 @@ def adjust_stain(inputIm,adjFactor = [1,1,1]):
     #                               Element 2: Hematoxylin
     #                               Element 3: Null (the remaining structure)
     # ###
-    # Output:
+    # Outputs:
     #     rgbOut: m x n x 3 array   A 2D RGB image (H&E) with the stain levels adjusted
     #     rgb1: m x n x 3 numpy arr A 2D RGB image of the Eosin layer only
     #     rgb2: m x n x 3 numpy arr A 2D RGB image of the Hematoxylin layer only
@@ -794,10 +794,45 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nPts = 2,
     comp_im = Image.composite(colorLayer, inputIm, alphaMask)
     return comp_im
     
-def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = "jpeg", perTileRand = None):
+def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,randAdd = 0, ext = None, perTileRand = None):
+    # outputIm = apply_artifact(inputImName,artifactType,outputImName = None, outputDir = None,
+    #                           randAdd = 0, ext = None, perTileRand = None):
+    #            Commmand line version of this package
+    #            Applies the default settings for each of the artifacts for this package
+    #            Handles per tile/slide randomization via hashing the file name into a random seed
+    #            Leans on the file structure to determine the tile name & slide name
+    # 
+    # ###
+    # Inputs: Required
+    #     inputImName: string       The fully qualified name of the input image (include path)
+    #        (filename)
+    #     artifactType: string      The type of artifact to add
+    #                               Currently implemented artifacts:
+    #                               'marker', 'fold', 'sectioning', 'illumination', 'bubbles', 'stain', 'tear'
+    # Inputs: Optional
+    #     outputImName: string      Optional output filename
+    #                               currently defaults to original name + '_' + first 4 chars of artifact
+    #                               e.g. im1.jpeg -> im1_mark.jpeg
+    #     outputDir: string         Optional output directory
+    #                               defaults to current directory
+    #     randAdd: string           Optional number to add to the random seed, e.g. if additional trials are desired
+    #     ext: string               Extension to output the file as (defaults to same as input)
+    #       no period               (e.g. 'jpeg', 'png')
+    #     perTileRand:              Whether to do randomization by tile or by slide (True = tile, False = slide)
+    #        None or True or False  Default (None) = based on the type of artifact
+    #                               {'marker' : True, 'fold': True, 'sectioning': True, 'illumination': True, 
+    #                                'bubbles': True, 'stain' : False, 'tear': True}
+    # ###
+    # Output:
+    #     outputIm: a PIL Image     A 2D RGB image with artifact added
+    # File Output:
+    #     Altered image saved to outputImName
+    
+    
+    
     artifactType = artifactType.lower()
     # to remove any linkage between the different types of random addition (e.g. marker vs fold)
-    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6,'tear': 7}
+    typeSeedAdd = {'marker' : 1, 'fold': 2, 'sectioning': 3, 'illumination': 4, 'bubbles': 5, 'stain' : 6, 'tear': 7}
     # to randomize slide/tile based on type of artifact
     typeTileRand = {'marker' : True, 'fold': True, 'sectioning': True, 'illumination': True, 'bubbles': True, 
                     'stain' : False, 'tear': True}
@@ -808,6 +843,8 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
     oPath1, rDir1 = os.path.split(inputImDir)
     _, rDir2 = os.path.split(oPath1)
     fNameNoExt = os.path.splitext(fName)[0]
+    if ext is None:
+        ext = os.path.splitext(fName)[-1]
     
     if perTileRand is None:
         perTileRand = typeTileRand[artifactType]
