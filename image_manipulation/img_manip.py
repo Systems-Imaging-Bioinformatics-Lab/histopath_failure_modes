@@ -80,9 +80,9 @@ def rand_spline(dim, inPts = None, nPts = 5, random_seed = None, startEdge = Tru
     return splXY
 
 def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None, zeroToOne = False,
-              minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
+               minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
     # sumMap = rand_gauss(dim, nNorms = 25, maxCov = 50, random_seed = None,centXY = None, zeroToOne = False,
-    #                  minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
+    #                     minMaxX = None, minMaxY = None, minCovScale = .1,minDiagCovScale = .25, maxCrCovScale = .7):
     #          Builds a set of randomized Gaussians within a set range of properties, and adds them together
     #
     # ###
@@ -156,8 +156,8 @@ def rand_gauss(dim, nNorms = 25, maxCov = 50,  random_seed = None,centXY = None,
     return sumMap
 
 def add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
-              width = 100, alpha = .75, rgbVal= None,
-              rgbRange = np.array([[0,50],[0,50],[0,100]])):
+               width = 100, alpha = .75, rgbVal= None,
+               rgbRange = np.array([[0,50],[0,50],[0,100]])):
     # comp_im = add_marker(inputIm,random_seed = None,nPts = 3, sampSpl = None, inPts = None, 
     #                     width = 100, alpha = .75, rgbVal= None,
     #                     rgbRange = np.array([[0,50],[0,50],[0,100]])):
@@ -349,7 +349,7 @@ def add_fold(inputIm, sampArr = None, sampSpl=None, inPts = None, random_seed =N
     return comp_im
 
 def add_sectioning(inputIm, width = 240, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
-                  sampSpl = None, inPts = None, nPts = 2, endEdge = -2):
+                   sampSpl = None, inPts = None, nPts = 2, endEdge = -2):
     # comp_im = add_sectioning(inputIm, sliceWidth = 120, random_seed = None, scaleMin = .5, scaleMax = .8, randEdge = True,
     #                         sampSpl = None, inPts = None, nPts = 2, endEdge = -2):
     #         Add a region of uneven (thinner) sectioning due to different thicknesses of slide
@@ -426,7 +426,7 @@ def add_sectioning(inputIm, width = 240, random_seed = None, scaleMin = .5, scal
     return comp_im
 
 def add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
-               edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
+                edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
     # comp_im = add_bubbles(inputIm,random_seed = None,nBubbles = 25, maxWidth = 50,alpha = .75, edgeWidth = 2,
     #                      edgeColorMult = (.75,.75,.75), rgbVal = (225,225,225)):
     #           adds bubbles in the mold of nuclear bubbling randomly throughout the image
