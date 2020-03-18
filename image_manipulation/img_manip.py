@@ -605,6 +605,7 @@ def add_stain(inputIm,adj_factor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1
     # Output:
     #     comp_im: a PIL Image      A 2D RGB image (H&E) with the stain levels adjusted
     
+    
     if adj_factor is None:
         np.random.seed(seed=random_seed) 
         adjFactor = np.ones((1,3))
@@ -616,43 +617,113 @@ def add_stain(inputIm,adj_factor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1
     return comp_im
 
 
-def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
-             minSpacing = 20, maxSpacing = 40, minTearStart = 0, maxTearEnd = None,tearStEndFactor = [.2,.8],
-             dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptRadius = 2.25, tearAlpha = 1,edgeWidth = 2,
+def add_tear(inputIm,sampSpl = None, random_seed = None, nPts = 2,
+             minSpacing = 20, maxSpacing = 40, tearStartFactor = [-.15,.15],tearEndFactor = [.85,1.15],
+             dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptRadius = 2.25, tearAlpha = 1,
              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
-             t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
-             edgeAlpha = .75, edgeColorMult = [.85,.7,.85],rgbVal = (245,245,245),
+             l1MinCt = 3, l1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
+             edgeWidth = 2, edgeAlpha = .75, edgeColorMult = [.85,.7,.85],rgbVal = (245,245,245),
              randEdge = True):
+    # comp_im = add_tear(inputIm,sampSpl = None, random_seed = None, nPts = 2,
+    #              minSpacing = 20, maxSpacing = 40, tearStartFactor = [-.15,.15],tearEndFactor = [.85,1.15]
+    #              dirMin = 10, dirMax = 30, inLineMax = None, perpMax = None, ptRadius = 2.25, tearAlpha = 1,
+    #              inLinePercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),perpPercs = np.array([(-.5,-.3,-.2),(.5,.3,.2)]),
+    #              t1MinCt = 3, t1MaxCt = 8, minDensity = [.5,.5], maxDensity = [1.5,1.5],
+    #              edgeWidth = 2, edgeAlpha = .75, edgeColorMult = [.85,.7,.85], rgbVal = (245,245,245),
+    #              randEdge = True):
+    #           Adds a tear to the tissue as an artifact.
+    #           These tears are seeded along a spline, with a randomized distance between the center of each tear.
+    #           Each tear is built up in layers (3 by default), with a randomized uniform distribution at each level.
+    #           The first layer has a small number of points, with a larger percentage of distance between them.
+    #           The next layer uses the previous layers points as a starting point at random
+    #           then adds a smaller amount of distance in a uniform distribution
+    #           This is repeated again for each of the remaining layers.
+    #           The result is then used to feed a distance function, so that any pixel within a radius of any of the points
+    #           is added to the tear mask
+    #           
+    # ### 
+    # Inputs: Required
+    #     inputIm: a PIL Image      A 2D RGB image
+    # Inputs: Optional
+    #     sampSpl: n x 2 numpy arr  You can optionally specify the sampled spline (non-random)
+    #     random_seed: int          The random seed for numpy for consistent generation
+    #     nPts: int (+)             The number of random handle points in the spline
+    #     minSpacing: float (+)     The minimum for the random spacing between tears, in pixels
+    #     maxSpacing: float (+)     The maximum for the random spacing between tears, in pixels
+    #     tearStartFactor:          The min for where the tear randomly starts along the spline, in percentage & 
+    #       2 float vec             The max for where the tear randomly starts along the spline, in percentage
+    #     tearEndFactor:            The min for where the tear randomly end along the spline, in percentage & 
+    #       2 float vec             The max for where the tear randomly ends along the spline, in percentage
+    #     dirMin:  float (+)        The minimum for randomized inline and perpendicular direction max distance in pixels
+    #     dirMax:  float (+)        The maximum for randomized inline and perpendicular direction max distance in pixels
+    #     inLineMax:  float (+)     You can optionally set the maximum size of the tear in the spline direction
+    #     perpMax:  float (+)       You can optionally set the maximum size of the tear in the perpendicular direction
+    #     ptRadius: float (+)       The size of each point's effect on the tear in pixels
+    #     tearAlpha: float (0-1)    The alpha transparency of the tear layer (1 = opaque, 0 = transparent)
+    #
+    #     inLinePercs:              You can optionally set your own tear layer structure
+    #       2 x n numpy float arr   The values are the percentage of distance in the in line direction that the tears take up
+    #       n = number of layers    [.5,.3,.2] means most of the structure of the tear is set early
+    #       rec. [[-,-,-],[+,+,+]]  and later layers fill it out
+    #       rec. each row should    Making the matrix asymmetric betw. the + and -, could give a force component to the tear
+    #          add up to 1 or -1    Should match the number of layers in the perpendicular side
+    #                               
+    #     perpPercs:                You can optionally set your own tear layer structure
+    #       2 x n numpy float arr   The values are the % of distance in the perpendicular direction that the tears take up
+    #       n = number of layers    [.5,.3,.2] means most of the structure of the tear is set early
+    #       rec. [[-,-,-],[+,+,+]]  and later layers fill it out
+    #       rec. each row should    Making the matrix asymmetric betw. the + and -, could give a sided-ness to the tear
+    #          add up to 1 or -1    Should match the number of layers in the inline side
+    #                               
+    #     l1MinCt: int (+)          The first layer is set by number instead of density in the later layers
+    #                               - Minimum # of pts in the first layer
+    #     l1MaxCt: int (+)          The first layer is set by number instead of density in the later layers
+    #                               - Maximum # of pts in the first layer
+    #     minDensity:               The second layer and beyond are set by density instead of #
+    #        n-1 int (+) vector     - Minimum density of points in the 2nd, 3rd, etc. layers
+    #        n = number of layers
+    #     maxDensity:               The second layer and beyond are set by density instead of #
+    #        n-1 int (+) vector     - Minimum density of points in the 2nd, 3rd, etc. layers
+    #     edgeAlpha: float (0-1)    The alpha transparency of the edge layer (1 = opaque, 0 = transparent)
+    #     edgeColorMult:            The RGB multiplier of the edge of the tear 
+    #        3 float vector         -Relative to the mean RGB color of the image
+    #     rgbVal: 3 float vector    The RGB color of the tear (i.e. background)
+    #     randEdge: bool            Whether to add some randomness to the edge of the tear
+    #                               Defaults to on
+    # ###
+    # Output:
+    #     comp_im: a PIL Image      A 2D RGB image with tear artifact added
+    
     np.random.seed(seed=random_seed)
     dim = inputIm.size # width by height
     invDim = (dim[1],dim[0])
     if sampSpl is None:
-        sampSpl = rand_spline(dim, nPts = nSplPts,random_seed = random_seed,endEdge=-2)
+        sampSpl = rand_spline(dim, nPts = nPts,random_seed = random_seed,endEdge=-2)
     
     # determine where the tears are located
-    tearSpacing = np.random.randint(minSpacing,maxSpacing,size=(sampSpl.shape[0],1))
+    tearSpacing = np.random.uniform(minSpacing,maxSpacing,size=(sampSpl.shape[0],1))
     splLen = sampSpl.shape[0]-1
-    if maxTearEnd is None:
-        maxTearEnd = splLen
+    minTearStartPx = splLen * 0
+    maxTearEndPx = splLen * 1
     # randomly trim the start and end
     tearStEnd = np.zeros((2,1))
-    tearStEnd[0] = np.random.randint(0,np.floor(splLen*tearStEndFactor[0]),size=(1,1))
-    tearStEnd[1] = tearStEnd[0] + np.random.randint(np.floor(splLen*tearStEndFactor[1]),splLen,size=(1,1))
-    tearStEnd[0] = 0
-    tearStEnd[1] = splLen
+    tearStEnd[0] = np.random.uniform(tearStartFactor[0],tearStartFactor[1],size=(1,1)) * splLen
+    tearStEnd[1] = np.random.uniform(tearEndFactor[0],tearEndFactor[1],size=(1,1)) * splLen
+    tearStEnd = (np.round(tearStEnd)).astype(int)
 
-    tearStEnd[tearStEnd > maxTearEnd] = maxTearEnd
-    tearStEnd[tearStEnd < minTearStart] = minTearStart
-    cdTS = np.cumsum(tearSpacing)
+
+    tearStEnd[tearStEnd > maxTearEndPx] = maxTearEndPx
+    tearStEnd[tearStEnd < minTearStartPx] = minTearStartPx
+    cdTS = np.round(np.cumsum(tearSpacing)).astype(int)
     cdTS = cdTS[(cdTS >= tearStEnd[0]) & (cdTS < tearStEnd[1])]
 
     tearCents = sampSpl[cdTS,:]
     splDer = sampSpl[:-1,:]- sampSpl[1:,:]
 
     if inLineMax is None:
-        inLineMax = np.random.randint(dirMin,dirMax,size=(1,1))
+        inLineMax = np.random.uniform(dirMin,dirMax,size=(1,1))
     if perpMax is None:
-        perpMax = np.random.randint(dirMin,dirMax,size=(1,1))
+        perpMax = np.random.uniform(dirMin,dirMax,size=(1,1))
     
     splDer = np.concatenate((splDer[[0],:],splDer))
     tearDer = splDer[cdTS,:]
@@ -661,8 +732,8 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
 
     nTears = tearCents.shape[0]
     
-    tearCts = np.random.randint(t1MinCt,t1MaxCt,size=(nTears,1))
-    for tNo in range(len(minDensity)): # build up the tier matrix
+    tearCts = np.random.randint(l1MinCt,l1MaxCt,size=(nTears,1))
+    for tNo in range(len(minDensity)): # build up the layer matrix
         tearCts = np.append(tearCts, np.random.randint(np.ceil(tearDensity*minDensity[tNo]),
                                                        np.ceil(tearDensity*maxDensity[tNo]),size=(nTears,1)),
                             axis = 1)
@@ -670,27 +741,27 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     tearCtIdxs = np.concatenate((np.zeros((1)),np.cumsum(np.sum(tearCts,axis=1))),axis=0)
 
     tearXY = np.zeros((np.sum(tearCts),2))
-    tierMats = {}
-    # generate tears by using random points
+    layerMats = {}
+    # generate tears by using random points in layers
     for tIdx in range(len(cdTS)):
-        tierMats[tIdx] = {}
-        for tier in range(tearCts.shape[1]): # work in tiers, each tier builds off of the last, gradually filling out the space
-            # each tier builds off the last with a uniform distribution
-            nPts = tearCts[tIdx,tier]
-            if tier == 0:
-                centPts = np.repeat(np.reshape(tearCents[tIdx,:],(1,2)),nPts,axis=0)
+        layerMats[tIdx] = {}
+        for layer in range(tearCts.shape[1]): # work in layers, each layer builds off of the last, gradually filling out the space
+            # each layer builds off the last with a uniform distribution
+            nTPts = tearCts[tIdx,layer]
+            if layer == 0:
+                centPts = np.repeat(np.reshape(tearCents[tIdx,:],(1,2)),nTPts,axis=0)
             else:
-                centIdxs = np.random.randint(0,tearCts[tIdx,tier-1],size=(nPts))
-                centPts = tierMats[tIdx][tier-1][centIdxs,:]
-            inLineFactor = np.random.uniform(inLinePercs[0,tier]*inLineMax,inLinePercs[1,tier]*inLineMax,size=(nPts,1))
-            perpFactor = np.random.uniform(perpPercs[0,tier]*perpMax,perpPercs[1,tier]*perpMax,size=(nPts,1))
+                centIdxs = np.random.randint(0,tearCts[tIdx,layer-1],size=(nTPts))
+                centPts = layerMats[tIdx][layer-1][centIdxs,:]
+            inLineFactor = np.random.uniform(inLinePercs[0,layer]*inLineMax,inLinePercs[1,layer]*inLineMax,size=(nTPts,1))
+            perpFactor = np.random.uniform(perpPercs[0,layer]*perpMax,perpPercs[1,layer]*perpMax,size=(nTPts,1))
             cDerIL = tearDer[tIdx,:]
             cDerP = np.array([tearDer[tIdx,1], -tearDer[tIdx,0]])
             totVec = (inLineFactor * cDerIL) + (perpFactor * cDerP)
             newPts = centPts + totVec
-            tierMats[tIdx][tier] = newPts.copy()
+            layerMats[tIdx][layer] = newPts.copy()
         idxRng = range(tearCtIdxs[tIdx].astype(int),tearCtIdxs[tIdx+1].astype(int))
-        tearXY[idxRng,:] = np.vstack(list(tierMats[tIdx].values()))
+        tearXY[idxRng,:] = np.vstack(list(layerMats[tIdx].values()))
     
     # rectify the points so we don't go out of bounds
     tearXY = np.maximum(tearXY,0)
@@ -710,14 +781,6 @@ def add_tear(inputIm,sampSpl = None, random_seed = None, nSplPts = 2,
     alphaArr = (tearBW*tearAlpha*255).astype(np.uint8)
     colorArr = np.zeros((invDim[0],invDim[1],3),dtype=np.uint8)
     edgeArea = np.logical_and(tearDist > ptRadius,tearDist <= ptRadius+edgeWidth)
-    
-#     blurIm = Image.fromarray(blur(np.array(inputIm),(75,75)),"HSV")
-#     imHSV = blurIm.convert("HSV")
-#     blurBackground = np.array(imHSV)
-#     blurBackground[:,:,1] = np.uint8(np.minimum(blurBackground[:,:,1] * 1.5,255))
-#     blurBackground[:,:,2] = np.uint8(np.minimum(blurBackground[:,:,2] * 1.2,255))
-#     blurHSV = Image.fromarray(blurBackground,"HSV")
-#     blurRGB = np.array(blurHSV.convert("RGB"))
     
     # determine the color of the edge area and the 
     meanColor = np.mean(np.array(inputIm),axis=(0,1))
