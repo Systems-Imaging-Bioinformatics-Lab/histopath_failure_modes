@@ -12,7 +12,7 @@ This project uses the 3-way classifier from *Coudray, N., Ocampo, P.S., Sakellar
 This project utilizes git submodules to reference the code already procuced for DeepPATH as part of Coudray et al.(TODO: Properly cite). 
 To properly clone this repository use the following command:
 
-    git clone --recurse-submodules git@github.com:jeremykap/BIOINF590_FinalProject.git
+    git clone --recurse-submodules git@github.com:Systems-Imaging-Bioinformatics-Lab/histopath_failure_modes.git
 
 ### Checkpoints
 You'll also need the (large) checkpoints files to properly use the models. You can retrain them using the instructions in DeepPATH, or they can be provided. Either way, they'll need to be placed in a directory named checkpoints in the repository root. In each checkpoint used you'll also need to create a file named `checkpoint` to tell TensorFlow the absolute paths to the file:
