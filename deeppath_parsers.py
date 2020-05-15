@@ -87,3 +87,14 @@ def parse_tile_probs(path):
                 entry["class"] = "LUSC"
             entries.append(entry)
     return entries
+
+def parse_modified_tile_log(path):
+    """Parse log of modified tiles (log_modified_tiles.tsv)
+    """
+    entries = []
+    with open(path,"r") as f:
+        for line in f.readlines():
+            fields = line.strip().split("/")
+            entry = (fields[4][:-6],fields[7][:-5])
+            entries.append(entry)
+    return entries
