@@ -27,8 +27,6 @@ dependencies:
   - chardet=3.0.4
   - configargparse=0.14.0
   - cryptography=2.8
-  - cudatoolkit=7.5
-  - cudnn=5.1
   - cycler=0.10.0
   - datrie=0.8
   - dbus=1.13.12
@@ -195,7 +193,6 @@ dependencies:
   - snakemake=5.10.0
   - snakemake-minimal=5.10.0
   - sqlite=3.30.1
-  - tensorflow-gpu=1.0.1
   - terminado=0.8.3
   - testpath=0.4.4
   - tk=8.6.8

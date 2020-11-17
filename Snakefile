@@ -2,7 +2,7 @@
 """
 
 from pathlib import Path
-work_dir = Path("work/")
+work_dir = Path("work")
 input_dir = work_dir / "input"
 intermeiate_dir = work_dir / "intermediate"
 output_dir = work_dir / "output"
@@ -11,7 +11,13 @@ ckpt = "run2a_3D_classifier/"
 
 experiment_dataset = "all"
 experiments = {
-   "marker" : [50,90]
+   "marker" : [100],
+   "fold" : [100],
+   "bubbles" : [100],
+   "tear" : [100],
+   "sectioning" : [100],
+   "illumination" : [100],
+   "stain" : [100]
 }
 exp_datasets = [f"exp_{exp_type}_{percent}"  for exp_type,percents in experiments.items() for percent in percents ]
 SEED = 42
@@ -35,7 +41,6 @@ rule download_slides:
     threads: 24
     shell:
         """
-        gdc-client download -m {input} -d $(dirname {output}) -n {threads}
         """
 rule tile_images:
     input: d=directory(str(input_dir / "{dataset}")), flag=str(input_dir / "{dataset}" / "slides_downloaded.done")
