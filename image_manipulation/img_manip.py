@@ -7,6 +7,8 @@ from scipy.stats import multivariate_normal
 from PIL import Image, ImageDraw
 from cv2 import GaussianBlur, blur, getPerspectiveTransform, warpPerspective
 
+from hashlib import blake2s
+
 from deconvolution import Deconvolution
 import deconvolution.pixeloperations as po
 
@@ -855,7 +857,11 @@ def apply_artifact(inputImName,artifactType,outputImName = None, outputDir = Non
 
     randMax = (2**32) -1  # max size of the random seed
     # there's potentially some concern about the difference in 32 bit vs 64 bit systems
-    random_hash = hash(fID) + randAdd + typeSeedAdd[artifactType]
+    h = blake2s()
+    h.update(fID.encode('utf-8'))
+    h_int = int(h.hexdigest(), 16)
+
+    random_hash = h_int + randAdd + typeSeedAdd[artifactType]
     random_seed = random_hash % randMax
     
     if artifactType == "marker":
