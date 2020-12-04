@@ -57,3 +57,6 @@ Some steps in the pipeline(`predict` and `make_tf_record`) can use a GPU if prov
     snakemake -j --resources gpu=$n
 
 where `$n` is the number of GPUs available on your system.
+
+## Example Notebook
+A notebook filled with examples of the default usage of the artifact generation software and examples of customization of artifacts is included at: image_manipulation/artifact_examples.ipynb
