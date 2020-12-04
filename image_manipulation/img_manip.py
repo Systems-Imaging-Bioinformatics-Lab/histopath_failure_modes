@@ -583,8 +583,8 @@ def adjust_stain(inputIm,adjFactor = [1,1,1]):
     
     return rgbOut,rgb1,rgb2,rgb3
 
-def add_stain(inputIm,adj_factor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1.25,1],random_seed = None):
-    # comp_im = add_stain(inputIm,adj_factor = None,scale_max = [3,3,1.5], scale_min = [1.25,1.25,1],random_seed = None):
+def add_stain(inputIm,adjFactor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1.25,1],random_seed = None):
+    # comp_im = add_stain(inputIm,adjFactor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1.25,1],random_seed = None):
     #           randomly adjust the stain levels of the H&E image
     #           based on the Deconvolution package: 
     #           https://deconvolution.readthedocs.io/en/latest/readme.html#two-stain-deconvolution 
@@ -608,7 +608,7 @@ def add_stain(inputIm,adj_factor = None,scaleMax = [3,3,1.5], scaleMin = [1.25,1
     #     comp_im: a PIL Image      A 2D RGB image (H&E) with the stain levels adjusted
     
     
-    if adj_factor is None:
+    if adjFactor is None:
         np.random.seed(seed=random_seed) 
         adjFactor = np.ones((1,3))
         for stI in range(len(scaleMax)):
